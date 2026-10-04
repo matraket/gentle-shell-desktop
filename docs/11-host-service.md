@@ -42,8 +42,8 @@
 | **Session listing** | Lists pi sessions for the sidebar and maps a chat id to its session file. | `ChatHost.listChats` and `openChat` call the `SessionStore` port; the adapter imports pi in-process. | `src/main/domain/session/ChatHost.ts:95-108`; `src/main/adapters/piSessionStore.ts:27-42` |
 | **Setup and home choice** | Answers whether to show the first-run choice and stores the choice. | `SetupService` port and adapter; [ADR 0008](03-architecture/adr/0008-first-run-home-choice.md). | `src/main/ports/index.ts:94-97`; `src/main/adapters/setupService.ts:15-41` |
 | **Config** | Reads and writes the persisted choice. | `AppConfigStore` writes `{home}` to a path it is given. | `src/main/adapters/appConfigStore.ts:11-20`, `:34-39`; `src/main/index.ts:52` |
-| **Client protocol endpoint** | Exposes one versioned protocol to many clients at once. Frames, versioning and the push model are specified in the coming "Host protocol" document. | Electron IPC: 8 request channels and 2 push channels. | `src/shared/ipc-channels.ts:8-23`; `src/main/ipc/registerHandlers.ts:28-40` |
-| **Authentication** | Binds to loopback by default; any other bind requires a token or device pairing, and every connection checks `Origin` ([proposal 0004](07-proposals/0004-host-service.md#proposal)). Details are deferred to the coming "Host protocol" document. | None: IPC handlers trust the renderer's arguments. | `src/main/ipc/registerHandlers.ts:28-37`; [audit A14](03-architecture/audit.md#a14-preload-and-ipc-hardening) |
+| **Client protocol endpoint** | Exposes one versioned protocol to many clients at once. Frames, versioning and the push model are specified in the [Host protocol](12-host-protocol.md) document. | Electron IPC: 8 request channels and 2 push channels. | `src/shared/ipc-channels.ts:8-23`; `src/main/ipc/registerHandlers.ts:28-40` |
+| **Authentication** | Binds to loopback by default; any other bind requires a token or device pairing, and every connection checks `Origin` ([proposal 0004](07-proposals/0004-host-service.md#proposal)). Details are deferred to the [Host protocol](12-host-protocol.md) document. | None: IPC handlers trust the renderer's arguments. | `src/main/ipc/registerHandlers.ts:28-37`; [audit A14](03-architecture/audit.md#a14-preload-and-ipc-hardening) |
 
 `Inference:` normalizing in the service means every client receives the same `ChatState` and none of them parses the RPC stream or the activity schema. A fix to the parser (B5) then reaches every client at once.
 
@@ -134,8 +134,8 @@ Outside `src/main`:
 |---|---|---|---|
 | `src/preload/index.ts` | **replaced** as the service's client endpoint | Exposes the bridge on `window.gentle` over Electron IPC. `Inference:` it survives as a renderer bridge only if the Electron window keeps talking to an in-process host (placement (b)). | `src/preload/index.ts:1-4` |
 | `src/preload/bridge.ts` | reused as a pattern | `createBridge` implements `GentleBridge` over an injected `RendererIpc`, without importing Electron. `Inference:` a WebSocket bridge can follow the same shape over a socket. | `src/preload/bridge.ts:1-2`, `:10-19` |
-| `src/shared/bridge-types.ts` | reused unchanged | Plain data types; no chat id today (B1). | `src/shared/bridge-types.ts:122-129`, `:273-295` |
-| `src/shared/ipc-channels.ts` | **replaced** by host protocol frames | Electron IPC channel names. The frames are the coming "Host protocol" document's subject. | `src/shared/ipc-channels.ts:8-23` |
+| `src/shared/bridge-types.ts` | reused, changed by B1 and the host protocol | Plain data types; no chat id today (B1). The host protocol adds `chatId` and an error envelope ([12, Mapping table](12-host-protocol.md#mapping-table)). | `src/shared/bridge-types.ts:122-129`, `:273-295` |
+| `src/shared/ipc-channels.ts` | **replaced** by host protocol frames | Electron IPC channel names. The frames are the [Host protocol](12-host-protocol.md) document's subject. | `src/shared/ipc-channels.ts:8-23` |
 
 **What stays Electron-only in the composition root.** `app.setPath` for the smoke test (`src/main/index.ts:36-37`), `app.getPath("userData")` for the config file (`:52`), the `BrowserWindow` and its web preferences (`:74-87`), the IPC registration per window (`:89-90`), external links through `shell.openExternal` (`:97-102`), loading the renderer (`:106-113`) and the app lifecycle (`:116-139`). The rest, building the adapters and the `ChatHost` (`:53-67`), only needs a config path. `Inference:` (not run) that part can move into a plain-Node function that both the Electron root and a service root call, given the config path.
 
@@ -224,7 +224,7 @@ B5 does not depend on this sequence. It is a quick win ([QW-02](09-roadmap.md#qw
 
 ## Not covered here
 
-- **Protocol frames**, versioning on the wire and authentication details: the coming "Host protocol" document.
+- **Protocol frames**, versioning on the wire and authentication details: [Host protocol](12-host-protocol.md).
 - **Clients and topologies** (local, LAN, remote, mobile): the coming "Clients and topologies" document.
 - **Platforms** (Windows, macOS, Linux, WSL): [10-platforms.md](10-platforms.md).
 

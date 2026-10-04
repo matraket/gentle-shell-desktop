@@ -50,7 +50,7 @@ Electron, the browser and a future mobile app become clients of the same service
 | The bridge carries no chat id: `sendMessage` acts on "whichever chat is currently open". | `src/shared/bridge-types.ts:279-282` |
 | The renderer picks its bridge in one place: `window.gentle ?? mockBridge`. | `src/renderer/shared/bridge/useBridge.ts:11` |
 
-`Inference:` (read, not prototyped) the service can be extracted rather than written: move `ChatHost`, `PiSession` and their adapters behind a WebSocket server, and add a third `GentleBridge` implementation that speaks WebSocket, selected at the same point as the preload and mock bridges. The payload types are plain data that already cross a process boundary, so they can travel as JSON; this was not checked field by field.
+`Inference:` (read, not prototyped) the service can be extracted rather than written: move `ChatHost`, `PiSession` and their adapters behind a WebSocket server, and add a third `GentleBridge` implementation that speaks WebSocket, selected at the same point as the preload and mock bridges. The payload types are plain data that already cross a process boundary, so they can travel as JSON; this was not checked field by field (see [Host protocol, Transport and framing](../12-host-protocol.md#transport-and-framing)).
 
 ## Runtime requirements
 
@@ -132,10 +132,10 @@ T3 Code's Pi provider is in nightly builds only: the nightly tag `v0.0.46-nightl
 
 ## Dependencies
 
-Three documents detail this proposal; the first exists:
+Three documents detail this proposal; the first two exist:
 
 - [Host service architecture](../11-host-service.md)
-- Host protocol
+- [Host protocol](../12-host-protocol.md)
 - Clients and topologies
 
 ## Sources
@@ -166,4 +166,4 @@ Three documents detail this proposal; the first exists:
 - Discord, gentle-mesh post: Rafael The Hutt, 2026-10-04 23:20.
 - Conversation with Matrak, 2026-10-04 (not published).
 
-**Corpus:** [audit](../03-architecture/audit.md), [RPC contract](../04-rpc-contract.md), [vision](../00-vision.md), [roadmap](../09-roadmap.md), [platforms](../10-platforms.md).
+**Corpus:** [audit](../03-architecture/audit.md), [RPC contract](../04-rpc-contract.md), [vision](../00-vision.md), [roadmap](../09-roadmap.md), [platforms](../10-platforms.md), [host service architecture](../11-host-service.md), [host protocol](../12-host-protocol.md).
