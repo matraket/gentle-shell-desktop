@@ -180,7 +180,7 @@ The six runtime requirements of [proposal 0004](07-proposals/0004-host-service.m
 
 **Precedents for (a).** Both precedents in [proposal 0004](07-proposals/0004-host-service.md#prior-art-in-the-ecosystem) run their server as a separate process:
 
-- **Paseo.** "Paseo runs a local server called the daemon that manages your coding agents. Clients like the desktop app, mobile app, web app, and CLI connect to it." (`paseo@485221b:README.md:60`). In the desktop app, "the daemon starts automatically" (`:76`); `paseo` starts it without the app (`:80-89`). The desktop reuses a running daemon, restarting it on a version mismatch (`paseo@485221b:packages/desktop/src/daemon/daemon-manager.ts:291-300`). It launches the daemon with the Electron binary and `ELECTRON_RUN_AS_NODE: "1"` (`paseo@485221b:packages/desktop/src/daemon/node-entrypoint-launcher.ts:26-35`, `:47-57`); the executable comes from `resolveNodeExecPath()`, which returns `process.execPath`, or the app's Electron Helper on packaged macOS (`paseo@485221b:packages/desktop/src/daemon/runtime-paths.ts:77-99`, `:107-108`). On quit it stops the daemon it started unless `keepRunningAfterQuit` is set (`paseo@485221b:packages/desktop/src/daemon/quit-lifecycle.ts:55-73`), which defaults to `false` (`paseo@485221b:packages/desktop/src/settings/desktop-settings.ts:37-40`).
+- **Paseo.** "Paseo runs a local server called the daemon that manages your coding agents. Clients like the desktop app, mobile app, web app, and CLI connect to it." (`paseo@485221b:README.md:60`). In the desktop app, "the daemon starts automatically" (`:76`); `paseo` starts it without the app (`:80-89`). The desktop reuses a running daemon and restarts a daemon it owns on a version mismatch (`paseo@485221b:packages/desktop/src/daemon/daemon-manager.ts:266-267`, `:291-300`). It launches the daemon with the Electron binary and `ELECTRON_RUN_AS_NODE: "1"` (`paseo@485221b:packages/desktop/src/daemon/node-entrypoint-launcher.ts:26-35`, `:47-57`); the executable comes from `resolveNodeExecPath()`, which returns `process.execPath`, or the app's Electron Helper on packaged macOS (`paseo@485221b:packages/desktop/src/daemon/runtime-paths.ts:77-99`, `:107-108`). On quit it stops the daemon it started unless `keepRunningAfterQuit` is set (`paseo@485221b:packages/desktop/src/daemon/quit-lifecycle.ts:55-73`), which defaults to `false` (`paseo@485221b:packages/desktop/src/settings/desktop-settings.ts:37-40`).
 - **T3 Code.** "Then run `t3` to start the server and open the local web app. `t3 service install` keeps it running in the background" (`t3code@eac52f0:README.md:37`). Its desktop app starts the backend with `process.execPath` and `ELECTRON_RUN_AS_NODE: "1"` (`t3code@eac52f0:apps/desktop/src/backend/DesktopBackendConfiguration.ts:571`, `:586`), "so this backend process does not become a GUI app instance" (`t3code@eac52f0:apps/desktop/src/backend/DesktopBackendManager.ts:480-481`).
 
 This page cites no precedent for (b); none was searched for.
@@ -225,7 +225,7 @@ B5 does not depend on this sequence. It is a quick win ([QW-02](09-roadmap.md#qw
 ## Not covered here
 
 - **Protocol frames**, versioning on the wire and authentication details: [Host protocol](12-host-protocol.md).
-- **Clients and topologies** (local, LAN, remote, mobile): the coming "Clients and topologies" document.
+- **Clients and topologies** (local, LAN, remote, mobile): [13-clients-and-topologies.md](13-clients-and-topologies.md).
 - **Platforms** (Windows, macOS, Linux, WSL): [10-platforms.md](10-platforms.md).
 
 ## Sources

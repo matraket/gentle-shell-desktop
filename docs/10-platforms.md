@@ -149,9 +149,59 @@ Each piece has four rows: what its **docs** say (a support statement, or only a 
 5. Should the Windows console fix live in gentle-shell (its pi launch) as well as in the desktop?
 6. Is macOS Intel a target for desktop builds?
 
+## Host service (proposal 0004)
+
+> **[community] proposal, not current state.** [Proposal 0004](07-proposals/0004-host-service.md) proposes one local host service between every client and `gentle-shell --mode rpc`; its architecture is in [11-host-service.md](11-host-service.md) and its topologies in [13-clients-and-topologies.md](13-clients-and-topologies.md). Nothing in this section exists today. Paths with a `paseo@485221b:` or `t3code@eac52f0:` prefix are in those pinned repositories (see [13, Sources](13-clients-and-topologies.md#sources)).
+
+### Service lifecycle per OS
+
+Who starts and stops the service depends on [process placement](11-host-service.md#process-placement-open), which is open.
+
+| Placement | Who starts it | Who stops it | Per-OS notes |
+|---|---|---|---|
+| **(b) Embedded in Electron main** | The app. | The app. | `Inference:` as today: closing the last window quits the app on every platform except macOS (`gentle-shell-desktop@5ab4a00:src/main/index.ts:124-126`), and every chat stops with it. |
+| **(a) Started by the app** | The app, or it connects to a service already running. | The app on quit, or nobody if the service is kept running for other clients. | `Inference:` the same on every OS; Paseo stops a daemon it started unless `keepRunningAfterQuit` is set ([11, Process placement](11-host-service.md#process-placement-open)). |
+| **(a) Standalone, for browser or phone clients** | A per-user service of the OS, or the user from a terminal. | The OS at logout or shutdown, or the user. | T3 Code's precedent: on Linux it "needs systemd user services" and enables lingering so it "starts at boot and keeps running after logout"; on macOS it starts "when you log in" and stops "when you log out", through a LaunchAgent; "Windows background services are not supported." (`t3code@eac52f0:docs/user/background-service.md:45-54`, `:94`). |
+
+Whether a standalone service starts at login is open: [CT-03](13-clients-and-topologies.md#open-questions). `Inference:` on Windows no pinned precedent provides a background service, so a Windows user of a browser or phone client would depend on the desktop app, or on a service inside WSL (below).
+
+### Port and loopback binding
+
+- **Today.** There is no port: the renderer reaches main through 8 request and 2 push IPC channels (`gentle-shell-desktop@5ab4a00:src/shared/ipc-channels.ts:8-23`).
+- **Proposed.** **[community]** The service binds to loopback by default ([proposal 0004](07-proposals/0004-host-service.md#proposal)); whether loopback clients still need a credential is [HP-07](12-host-protocol.md#open-questions).
+- **Precedents.** Paseo listens on `127.0.0.1:6767` by default (`paseo@485221b:packages/server/src/server/config.ts:38`, `:470`) and can listen on a Unix socket instead (`:466-469`), of which Paseo says: "The CLI supports this mode, but the mobile app and web interface require a network connection." (`paseo@485221b:public-docs/security.md:63`). T3 Code binds to `127.0.0.1` (`t3code@eac52f0:apps/server/src/server.ts:249`) with default port `3773` (`t3code@eac52f0:apps/server/src/config.ts:23`). Paseo publishes the bound endpoint in a `paseo.pid` record that its CLI trusts (`paseo@485221b:docs/architecture.md:471`, `:475`).
+- `Inference:` a fixed port can collide with another program, or with an older service still running (version skew, B3); a published endpoint record lets clients find a service on any port. Which to use is undecided.
+
+### Service on Windows or inside WSL
+
+| | Service on Windows | Service inside WSL |
+|---|---|---|
+| **Runtime** | Native (topology A above) or inside WSL through `wsl.exe` (topology B above). | Inside the same distribution, spawned as on Linux. |
+| **Bridging** | Topology B's path, `WSLENV` and `\\wsl$` bridging stays ([WSL topologies](#wsl-topologies)). | `Inference:` none between service and runtime; only the client socket crosses, through WSL localhost forwarding or the distribution's IP address. `UNVERIFIED:` the reliability of localhost forwarding: T3 Code binds `0.0.0.0` inside WSL because "wslhost forwarding is unreliable on some Windows hosts", and advertises the distribution's IP (`t3code@eac52f0:apps/desktop/src/backend/DesktopBackendConfiguration.ts:616-627`). |
+| **Session list** | PLAT-07 applies under topology B. | `Inference:` the listing runs in the distribution and reads the Linux homes. |
+| **Detail** | [WSL topologies](#wsl-topologies) | [13, T3 Service inside WSL](13-clients-and-topologies.md#t3-service-inside-wsl) |
+
+Which one is the Windows target is open: [CT-04](13-clients-and-topologies.md#open-questions), alongside question 1 above.
+
+### Host service packaging and signing
+
+- **Embedded or started by the app.** `Inference:` shipped inside the app, the service can run under the app's own Electron binary in Node mode, so it adds no second binary to sign ([11, Process placement](11-host-service.md#process-placement-open)); it inherits this page's [Packaging and signing](#packaging-and-signing) state (unsigned today) and [milestone M5](09-roadmap.md#m5-signing-and-auto-update).
+- **Standalone.** A second distributable to package, sign and update, such as Paseo's `paseo` CLI or T3 Code's `t3` ([11, Process placement](11-host-service.md#process-placement-open)). `Inference:` M5's open platform scope (question 4 above) then covers two artifacts.
+- **Inside WSL.** A Linux build of the service installed in the distribution. T3 Code "installs its own server runtime there automatically" (`t3code@eac52f0:docs/user/install.md:76-77`).
+
+### Host service risks
+
+These continue the [Risks](#risks) table.
+
+| ID | Risk | Platform | Evidence | Impact | Mitigation | Related |
+|---|---|---|---|---|---|---|
+| PLAT-12 | A service inside WSL is shut down with an idle distribution. | WSL | `.wslconfig` `[general]` `instanceIdleTimeout`, default `15000` ms, and `[wsl2]` `vmIdleTimeout`, default `60000` ms, "The number of milliseconds that a VM is idle, before it is shut down" (Windows 11 only) ([wsl-config](https://learn.microsoft.com/en-us/windows/wsl/wsl-config), fetched 2026-10-05); `UNVERIFIED:` whether a running service counts as activity | Medium: clients lose the service (`Inference:`). | Test it; set the timeout or keep the distribution running. | CT-04 |
+| PLAT-13 | A loopback service inside WSL is reachable from every Windows process. | WSL | `localhostForwarding` defaults to `true` ([wsl-config](https://learn.microsoft.com/en-us/windows/wsl/wsl-config)); Windows apps reach Linux servers on `localhost` ([networking](https://learn.microsoft.com/en-us/windows/wsl/networking), fetched 2026-10-05). T3 Code goes further: it binds `0.0.0.0` inside WSL, exposing its server on the WSL virtual network (`t3code@eac52f0:apps/desktop/src/backend/DesktopBackendConfiguration.ts:616-627`) | Medium: "local" spans two systems (`Inference:`). | A loopback credential. | HP-07 |
+| PLAT-14 | No pinned precedent runs a background service on Windows. | Windows native | "Windows background services are not supported." (`t3code@eac52f0:docs/user/background-service.md:54`) | Low until browser or phone clients exist (`Inference:`). | Keep the service tied to the app on Windows, or run it inside WSL. | CT-03 |
+
 ## Sources
 
-**Desktop** (`gentle-shell-desktop@5ab4a00`): `README.md`, `electron-builder.yml`, `package.json`, `src/main/adapters/launcherLocator.ts`, `src/main/adapters/nodeProcessSpawner.ts`, `src/main/domain/home/home.ts`, `src/main/domain/session/PiSession.ts`, `src/main/index.ts`. GitHub, read-only: PR #26 (head `615dd87`) and PR #27 (head `f42c3bd`), both open; issues #23, #24, #25.
+**Desktop** (`gentle-shell-desktop@5ab4a00`): `README.md`, `electron-builder.yml`, `package.json`, `src/main/adapters/launcherLocator.ts`, `src/main/adapters/nodeProcessSpawner.ts`, `src/main/domain/home/home.ts`, `src/main/domain/session/PiSession.ts`, `src/main/index.ts`, `src/shared/ipc-channels.ts`. GitHub, read-only: PR #26 (head `615dd87`) and PR #27 (head `f42c3bd`), both open; issues #23, #24, #25.
 
 **gentle-shell** (`gentle-shell@ac67159`): `README.md`, `package.json`, `docs/readme-reference.md`, `docs/gentle-shell.md`, `docs/windows-startup-console-visibility.md`, `lib/gentle-shell-launcher.ts`, `lib/session-worktree-registry.ts`, `bin/gentle-shell.mjs`, `scripts/gentle-ai-installer.mjs`, `scripts/install-gentle-ai.mjs`, `odd/tasks/426-shellpath-rebase.md`, `.github/workflows/{ci,windows-hidden-processes,windows-session-bootstrap}.yml`.
 
@@ -162,5 +212,7 @@ Each piece has four rows: what its **docs** say (a support statement, or only a 
 **engram** (`engram@3951380`): `README.md`, `docs/INSTALLATION.md`, `.goreleaser.yaml`, `.github/workflows/ci.yml`.
 
 **Microsoft** (fetched 2026-10-03): [Working across file systems](https://learn.microsoft.com/en-us/windows/wsl/filesystems), [Advanced settings configuration](https://learn.microsoft.com/en-us/windows/wsl/wsl-config), [Basic commands](https://learn.microsoft.com/en-us/windows/wsl/basic-commands), [Run Linux GUI apps](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps).
+
+**Host service section** (added 2026-10-05): `paseo@485221b` (`getpaseo/paseo`) and `t3code@eac52f0` (`pingdotgg/t3code`); Microsoft, fetched 2026-10-05: [Accessing network applications with WSL](https://learn.microsoft.com/en-us/windows/wsl/networking), [Advanced settings configuration](https://learn.microsoft.com/en-us/windows/wsl/wsl-config); corpus: [proposal 0004](07-proposals/0004-host-service.md), [host service architecture](11-host-service.md), [host protocol](12-host-protocol.md), [clients and topologies](13-clients-and-topologies.md).
 
 **Corpus:** [ecosystem](02-ecosystem.md), [current architecture](03-architecture/current.md), [audit](03-architecture/audit.md) (A1, [A4](03-architecture/audit.md#a4-windows-cmd-launcher-spawned-without-a-shell), [A16](03-architecture/audit.md#a16-test-coverage-and-ci-gaps), [A18](03-architecture/audit.md#a18-launcher-discovery-and-platform-coverage)), [roadmap](09-roadmap.md) ([F2](09-roadmap.md#f2-platform-baseline-community-proposal), [QW-04](09-roadmap.md#qw-04-ci-workflow-audit-a16)), [team: Platform and distribution](08-team.md#platform-and-distribution), [issue #28](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28), sections "Author's framing: facts checked before writing", "Pinned versions" and "Author's framing: review of the vision (2026-10-03)".

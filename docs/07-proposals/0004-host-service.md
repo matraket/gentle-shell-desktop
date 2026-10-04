@@ -132,11 +132,11 @@ T3 Code's Pi provider is in nightly builds only: the nightly tag `v0.0.46-nightl
 
 ## Dependencies
 
-Three documents detail this proposal; the first two exist:
+Three documents detail this proposal; all three exist:
 
 - [Host service architecture](../11-host-service.md)
 - [Host protocol](../12-host-protocol.md)
-- Clients and topologies
+- [Clients and topologies](../13-clients-and-topologies.md)
 
 ## Sources
 
