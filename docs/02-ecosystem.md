@@ -44,7 +44,7 @@ flowchart TB
   C --> H
   RPC -- "sessions, settings, auth" --> H
   D -- "dynamic import, list sessions" --> LIB
-  LIB -- "reads sessions" --> H
+  LIB -- "reads sessions" --> H; HS["Host service<br/>PROPOSED, not built (proposal 0004)"]; D -. "proposed: client" .-> HS; HS -. "proposed: spawn --mode rpc, one child per chat pending vision Q3" .-> L
 ```
 
 | Edge | Evidence |
@@ -67,7 +67,7 @@ flowchart TB
 | **Companion packages** | Pi packages gentle-ai installs into a home. See [Companion packages](#companion-packages). | npm | `GA:internal/agents/pi/adapter.go:65-70` |
 | **Bundled dependency** | `@heyhuynhgiabuu/pi-pretty` 0.6.27, a runtime dependency of gentle-pi, loaded through `extensions/pi-pretty.ts`. `UNVERIFIED:` what it registers (the package is not installed in the reference checkout). | npm, installed with gentle-pi | `GS:package.json:74-76`; [inventory V15](05-capability-inventory.md#shell-experience) |
 | **Gentle Desktop** | An Electron app: "Desktop chat window for Gentle Shell / pi." | Source only; unsigned local builds | `gentle-shell-desktop@5ab4a00:package.json:7`; `gentle-shell-desktop@5ab4a00:README.md:7` |
-
+| **Host service** (proposed, not built) | **[community]** One local process between every Gentle Shell UI (Electron, browser, a future mobile app) and `gentle-shell --mode rpc`; it would own the sessions now held in Electron main. Dashed in the map above. See [Proposed: host service](#proposed-host-service). | Does not exist | [proposal 0004](07-proposals/0004-host-service.md#proposal) |
 ### Companion packages
 
 gentle-shell does not keep its own list. Its docs say "the companion list above is not maintained in gentle-shell itself — it is the managed Pi stack of the pinned package-local gentle-ai" (`GS:docs/readme-reference.md:304`). At the pinned gentle-ai v4.0.0:
@@ -147,9 +147,21 @@ The consequence that matters to the desktop: the chat list runs on pi 0.85.1 whi
 | Changes which companion packages a home gets | **gentle-ai** managed pi stack, then a gentle-pi pin bump | gentle-shell does not keep its own list | `GS:docs/readme-reference.md:304` | Retiring a plugin (as v4.0.0 did with `pi-mcp-adapter`) |
 | Renders or acts on data already on the wire, or changes desktop process, IPC or packaging | **Gentle Desktop** | No upstream dependency | [05](05-capability-inventory.md) rows with upstream "none"; [audit](03-architecture/audit.md) | `notify` toasts (inventory C20), tool cards (inventory C17), steering (inventory C4), multi-chat (audit A3), Windows spawn (audit A4; [10-platforms.md](10-platforms.md#spawning-batch-shims)) |
 
+## Proposed: host service
+
+**[community]** [Proposal 0004](07-proposals/0004-host-service.md) adds one piece to the map: a local host service that owns the session registry, spawns `gentle-shell --mode rpc` children and serves the Electron window, a browser tab and a future mobile app over one versioned WebSocket protocol. The contract with gentle-shell does not change ([04](04-rpc-contract.md)). It is not built and not decided. Details: [architecture](11-host-service.md), [protocol](12-host-protocol.md), [clients and topologies](13-clients-and-topologies.md).
+
 ## Community projects outside scope
 
 [gentle-mesh](01-glossary.md#community-terms-outside-scope) (an agent-to-agent protocol proposal) and Herdr-related tools come up in the community thread. They are not part of the pinned ecosystem, and this page does not map them.
+
+Proposal 0004 assessed these projects as prior art, alternatives or counter-examples; none is a dependency. Their commits are pinned in [0004, Sources](07-proposals/0004-host-service.md#sources).
+
+- **T3 Code** (`pingdotgg/t3code`): a server with mobile, web and Electron clients (`t3code@eac52f0:README.md:3`); its Pi provider spawns `pi --mode rpc`, in nightly builds only ([0004, Prior art](07-proposals/0004-host-service.md#prior-art-in-the-ecosystem)). Raised in the thread (Discord, vudumstead, 2026-10-03 00:39).
+- **Paseo** (`getpaseo/paseo`): "a local server called the daemon that manages your coding agents" (`paseo@485221b:README.md:60`); prior art in [0004](07-proposals/0004-host-service.md#prior-art-in-the-ecosystem).
+- **pi-web-ui** (`xing-shuyin/pi-web-ui`): "the pi SDK runs in-process" (README `:70`, https://github.com/xing-shuyin/pi-web-ui/blob/eb49d432ebd69b83fa2593695f586cfe569e7097/README.md, accessed 2026-10-05); rejected as a base in [0004](07-proposals/0004-host-service.md#alternatives-considered-and-rejected).
+- **herdr web clients**: `kcosr/herdr-web`, "not associated with ... the official Herdr project" (`herdr-web@f1312e2:README.md:3`), and `devswha/herdr-web-ui`, a Herdr plugin (`herdr-web-ui@7c5fe4e:README.md:98`) linked in the thread (Discord, Rafael The Hutt, 2026-09-30 09:27); rejected as a base in [0004](07-proposals/0004-host-service.md#alternatives-considered-and-rejected).
+- **open-pi-viewer** (`gonzalez962/open-pi-viewer`): suggested as a web connector (Discord, bojack7080, 2026-10-04 09:00); its server binds `0.0.0.0` (`open-pi-viewer@908245a:vite.config.ts:71`), and [0004](07-proposals/0004-host-service.md#alternatives-considered-and-rejected) records it as a security counter-example.
 
 ## Open questions
 

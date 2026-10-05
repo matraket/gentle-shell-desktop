@@ -321,6 +321,10 @@ Every inventory row is either on a screen above or listed here (checked by diffi
 - Which derived screens are in scope, and in what order? Depends on [vision Q1](../00-vision.md#open-questions-for-the-maintainer) (accessible vs full-featured).
 - Is the Work progress panel always visible, or only when a feature document exists?
 - Should Settings be one screen, or split between Providers, Extensions and Profiles as the mockup's navigation suggests?
+- **[community]** If the maintainer accepts [proposal 0004](../07-proposals/0004-host-service.md) (a shared host service) and brings remote clients into scope ([vision Q9](../00-vision.md#open-questions-for-the-maintainer)), two screens change and a third may be needed. None of these is specified; SCR IDs stay as they are.
+  - **SCR-09 First run.** `Inference:` a browser or phone would first be paired with the service, through a link or QR code and a per-device credential (HP-02 in [12, Open questions](../12-host-protocol.md#open-questions); [13, Future mobile app](../13-clients-and-topologies.md#future-mobile-app)).
+  - **SCR-18 Diagnostics and About.** `Inference:` it could show the service's own version, its protocol version and the gentle-shell and pi versions the service reports in the `welcome` handshake ([12, Handshake and versions](../12-host-protocol.md#handshake-and-versions)), on top of SCR-18's existing blockers, gap G10 and audit A8.
+  - **A connection screen for remote clients?** `Inference:` a browser tab or phone that cannot reach the service, or is not yet paired, has nothing to show today. Whether it needs its own screen (address, pairing, retry) is open and depends on vision Q9 and CT-01 ([13, Open questions](../13-clients-and-topologies.md#open-questions)).
 
 ## Sources read
 

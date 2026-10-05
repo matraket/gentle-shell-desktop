@@ -47,7 +47,7 @@ Upstream repositories have their own rules **[upstream]**; follow them there, no
 
 ## Proposing ideas
 
-Ideas that go beyond parity with gentle-shell are written as proposals in [docs/07-proposals/](docs/07-proposals/README.md#process): one file per idea at status `proposed`, opened as a pull request and added to the index. Only the maintainer moves a proposal to `accepted` or `declined` (governance D7, **[community proposal]**). The maintainer's vision stays in [00-vision.md](docs/00-vision.md) and is not edited to carry community ideas (`docs/README.md:37`).
+Ideas that go beyond parity with gentle-shell are written as proposals in [docs/07-proposals/](docs/07-proposals/README.md#process): one file per idea at status `proposed`, opened as a pull request and added to the index. Only the maintainer moves a proposal to `accepted` or `declined` (governance D7, **[community proposal]**). The maintainer's vision stays in [00-vision.md](docs/00-vision.md) and is not edited to carry community ideas (`docs/README.md:41`).
 
 ## Workflow
 
@@ -84,7 +84,7 @@ Notes:
 
 - One quick win or one coherent change per PR, with its tests and docs in the same PR.
 - When to use a feature-branch chain is not decided: 08 asks whether the group adopts it for every milestone or only for large ones ([open questions](#open-questions); [08 §Open questions](docs/08-team.md#open-questions)).
-- Corpus changes go as a pull request against the document (`docs/README.md:35-37`).
+- Corpus changes go as a pull request against the document (`docs/README.md:39-41`).
 - Code documentation that belongs with a change (`src/README.md`, the README dev section) is written by the author of that change ([08 §Docs and community](docs/08-team.md#docs-and-community)).
 
 ## Development setup

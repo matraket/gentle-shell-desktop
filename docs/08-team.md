@@ -26,7 +26,7 @@
 
 | Area | Leads on | Owner | Headcount **[community proposal]** |
 |---|---|---|---|
-| [Core and RPC contract](#core-and-rpc-contract) | Main process, session host, protocol parsing, IPC | `TBD` | 2–3 |
+| [Core and RPC contract](#core-and-rpc-contract) | Main process, session host, protocol parsing, IPC; the proposed host service, if [0004](07-proposals/0004-host-service.md) is accepted | `TBD` | 2–3 |
 | [Upstream integration](#upstream-integration-pi--gentle-shell--gentle-ai) | Changes the desktop needs in pi, gentle-shell or gentle-ai | `TBD` | 2–3 |
 | [Frontend](#frontend) | Renderer: screens and components | `TBD` | 2–4 |
 | [UX and design](#ux-and-design) | Principles, screen specs, design tokens | `TBD` | 1–2 |
@@ -65,7 +65,7 @@ Counts are the totals of the [coverage summary](05-capability-inventory.md#cover
 - **IPC hardening.** Audit A14 (see [security](#cross-cutting-concerns)).
 - **Structure rules in `src/main`.** The main-process part of audit A17 (`home.ts` imports, stale placeholder).
 - **Inventory.** Rows exposed over RPC as yes, partial or spawn ([allocation table](#how-inventory-rows-are-allocated)). They spread across 14 of the 17 inventory groups; the largest are Conversation and input (16), Shell experience (14), Sessions (13), Integrations, skills, memory and diagnostics (10) and Helpers (8) (yes + partial + spawn per group in the [coverage summary](05-capability-inventory.md#coverage-summary)).
-- **Undecided architecture.** Prepares the evidence for five of the seven candidates in [ADR "Undecided / not recorded"](03-architecture/adr/README.md#undecided--not-recorded): one child per chat vs a shared host, RPC-only vs mixed, prompt while working, version compatibility policy (vision Q3–Q6), and the host channel to gentle-shell features (with Upstream integration, since every alternative changes pi or gentle-shell). The maintainer decides them ([governance](#how-decisions-are-made)).
+- **Undecided architecture.** Prepares the evidence for seven of the nine candidates in [ADR "Undecided / not recorded"](03-architecture/adr/README.md#undecided--not-recorded): one child per chat vs a shared host, RPC-only vs mixed, prompt while working, version compatibility policy (vision Q3–Q6), the host channel to gentle-shell features (with Upstream integration, since every alternative changes pi or gentle-shell), and the host service's process placement and config location (with Platform). The maintainer decides them ([governance](#how-decisions-are-made)). **[community proposal]** If the maintainer accepts [proposal 0004](07-proposals/0004-host-service.md), Core also owns the host service itself: session registry, composition root and the [host protocol](12-host-protocol.md) ([11](11-host-service.md); its runtime requirements B1–B6 are mostly the multi-chat and correctness work above).
 
 **Out of scope**
 - Rendering and visual design: Frontend and UX.
@@ -188,7 +188,7 @@ gentle-pi and gentle-shell are one package (`gentle-shell@ac67159:package.json`,
 **Scope**
 - **Audit findings and platform risks.** Audit A4 (High: Windows `.cmd` spawn), audit A9 (first-run provisioning progress; with Upstream integration), audit A18 (launcher discovery and platform coverage), audit A15 (mock bridge in packaged builds; with Frontend); the support matrix, WSL topologies and risks PLAT-01 to PLAT-11 in [10-platforms.md](10-platforms.md#risks). Two open upstream PRs are external contributions in this scope, not merged as of 2026-10-03: #26 (Windows spawner, audit A4; it leaves paths unquoted, PLAT-02) and #27 (cross-platform `dev:local-pi`, audit A18). Reviewing them belongs here; contributing a PR does not make anyone the area's owner.
 - **CI infrastructure.** The workflow audit A16 recommends, with a Windows job once audit A4 lands ([audit §3 Platform](03-architecture/audit.md#3-platform)).
-- **Packaging.** `electron-builder` targets for macOS, Windows and Linux (`gentle-shell-desktop@5ab4a00:package.json:18-21`). Only macOS (Apple silicon) is tested, and there are no signed builds (`gentle-shell-desktop@5ab4a00:README.md:7`).
+- **Packaging.** `electron-builder` targets for macOS, Windows and Linux (`gentle-shell-desktop@5ab4a00:package.json:18-21`). Only macOS (Apple silicon) is tested, and there are no signed builds (`gentle-shell-desktop@5ab4a00:README.md:7`). **[community proposal]** If [proposal 0004](07-proposals/0004-host-service.md) is accepted, also the host service's packaging, lifecycle per OS and Windows-or-WSL placement ([10, Host service](10-platforms.md#host-service-proposal-0004); CT-03, CT-04 in [13](13-clients-and-topologies.md#open-questions); PLAT-12 to PLAT-14).
 - **Runtime shipping.** Prepares evidence for the undecided "bundled vs external runtime" question (vision Q2, [ADR not recorded](03-architecture/adr/README.md#undecided--not-recorded)). The maintainer decides it.
 
 **Out of scope**
@@ -235,7 +235,7 @@ gentle-pi and gentle-shell are one package (`gentle-shell@ac67159:package.json`,
 |---|---|---|---|
 | **Accessibility** | Named as an area by Matrak (Discord, 2026-09-27). Proposed rule UX [U11](06-ux/principles.md#u11-accessible-by-default) and keyboard parity UX [U10](06-ux/principles.md#u10-keyboard-parity-with-the-cli), both **[community]**. Not covered by the audit (`03-architecture/audit.md:18`). | Keyboard reach, focus, live regions, reduced motion (UX U11 rule). | UX, Frontend, QA |
 | **Performance** | Named as an area by Matrak (Discord, 2026-09-27). Rendering performance and packaged-app size are not covered by the audit (`03-architecture/audit.md:18`). No measurement exists in the corpus. | `Inference:` a baseline first (startup, long chats, many helpers), since nothing is measured yet. | Core, Frontend, Platform |
-| **Security** | Audit A14 (IPC validation, sandbox, CSP without `'unsafe-eval'`, `will-navigate` guard) and audit A15 (mock bridge in packaged builds). | IPC surface and packaged-build behavior. | Core, Platform, Frontend |
+| **Security** | Audit A14 (IPC validation, sandbox, CSP without `'unsafe-eval'`, `will-navigate` guard) and audit A15 (mock bridge in packaged builds). **[community proposal]** If [proposal 0004](07-proposals/0004-host-service.md) is accepted: the host service's authentication and argument validation (proposal 0004 requirement B4), `Origin` checks ([0004, Proposal](07-proposals/0004-host-service.md#proposal)), the auth model beyond loopback (HP-02) and a credential on loopback (HP-07) ([12, Auth and origin](12-host-protocol.md#auth-and-origin)). | IPC surface and packaged-build behavior; for the host service, every listening socket and its credentials. | Core, Platform, Frontend |
 
 ## Interest expressed in the thread
 

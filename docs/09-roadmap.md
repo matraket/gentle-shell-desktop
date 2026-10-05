@@ -148,7 +148,7 @@ These need a maintainer decision before they can enter the roadmap.
 | Steering and follow-up while the agent works (inventory C4, C5, C6, C7; audit A7) | vision Q5 (queue, steer or decline) | [ADR undecided: prompt while working](03-architecture/adr/README.md#undecided--not-recorded) |
 | Inventory-derived screens SCR-10 to SCR-19 | vision Q1 (accessible or full-featured); screens open question on scope and order | `06-ux/screens.md:321` |
 | Proposals 0001 to 0003 (graph view, interacting with a running node, post-hoc audit of finished helpers) | Status `proposed`; only the maintainer moves a proposal to `accepted` (`07-proposals/README.md:22`) | Need gap G8, G1 and inventory C4, A6, A12 (`07-proposals/README.md:11-13`) |
-
+| Host service (proposal 0004): one local service for the Electron window, a browser tab and a future mobile app | vision Q9 (mobile or remote access in scope; its evidence carries the maintainer's web suggestion, `00-vision.md:135`), and the maintainer accepting [proposal 0004](07-proposals/0004-host-service.md) (status `proposed`, `07-proposals/README.md:14`, `:22`) | Depends on [F1](#f1-foundations-several-chats-at-once-community-proposal): runtime requirement B1 is F1's work ([0004, Runtime requirements](07-proposals/0004-host-service.md#runtime-requirements)); process placement and config location are [ADR undecided](03-architecture/adr/README.md#undecided--not-recorded) ([DEP-16](#dependencies-and-critical-path)) |
 ## Dependencies and critical path
 
 ```mermaid
@@ -185,7 +185,7 @@ flowchart LR
   G1 -->|DEP-15| STOP
 ```
 
-Hexagons are maintainer decisions, slanted boxes are upstream gaps (owners per 02, `Inference:`). Solid edges rest on cited evidence; dashed edges are `Inference:`. Edges labelled "partial" gate only part of the target milestone; the table says which part. The Windows topology question (native, or the runtime in WSL; [10-platforms §Open questions](10-platforms.md#open-questions-for-the-maintainer), question 1) also gates F2 but has no node or edge here; see the [F2 blocking questions](#f2-platform-baseline-community-proposal).
+Hexagons are maintainer decisions, slanted boxes are upstream gaps (owners per 02, `Inference:`). Solid edges rest on cited evidence; dashed edges are `Inference:`. Edges labelled "partial" gate only part of the target milestone; the table says which part. The Windows topology question (native, or the runtime in WSL; [10-platforms §Open questions](10-platforms.md#open-questions-for-the-maintainer), question 1) also gates F2 but has no node or edge here; see the [F2 blocking questions](#f2-platform-baseline-community-proposal). DEP-16 (host service, not scheduled) has no node or edge here.
 
 | Edge | From → to | Evidence |
 |---|---|---|
@@ -204,7 +204,7 @@ Hexagons are maintainer decisions, slanted boxes are upstream gaps (owners per 0
 | DEP-13 | vision Q2 → M5 | `Inference:` what a signed package contains depends on bundled or external runtime ([ADR undecided](03-architecture/adr/README.md#undecided--not-recorded)). |
 | DEP-14 | Quick wins → Helper Stop | "The desktop parser must be correct first" (`03-architecture/audit.md:384`), which [QW-02](#qw-02-helper-statuses-and-tool-items-audit-a5) fixes. |
 | DEP-15 | gap G1 → Helper Stop | No RPC command targets subagents (`04-rpc-contract.md:286`); Stop is disabled until one exists (`gentle-shell-desktop@5ab4a00:README.md:62`). |
-
+| DEP-16 | F1, vision Q9, acceptance of proposal 0004 → host service (proposal 0004, not scheduled) | Proposal 0004 says its runtime requirement B1 "is the same work as" roadmap F1 (`07-proposals/0004-host-service.md:57`) and keeps open whether F1 comes before or after the extraction (design question 2, `:130`); [11, Migration path](11-host-service.md#migration-path) puts F1 first (`Inference:` there). Remote and mobile clients wait on vision Q9 (`00-vision.md:135`). |
 ### Critical path
 
 `Inference:` with no durations in any source, this ranks paths by their gates, not by time.

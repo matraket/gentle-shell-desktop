@@ -384,7 +384,7 @@ These follow from the findings. They are not separate defects.
 | Helper Stop | A5 | Needs an RPC command upstream ([gap G1](../04-rpc-contract.md#gaps-the-desktop-needs)). The desktop parser must be correct first. |
 | Providers and extensions screens (M4) | A2, A8 | Either more in-process pi (which makes A1 and A2 worse) or new RPC commands ([gaps G3–G5](../04-rpc-contract.md#gaps-the-desktop-needs)). |
 | Windows and Linux releases | A4, A16, A18 | No CI and no tested platforms besides macOS. Platform detail: [10-platforms.md](../10-platforms.md). |
-
+| Host service for browser and mobile clients ([proposal 0004](../07-proposals/0004-host-service.md), **[community]**, not decided) | A3, A1, A8, A14, A5, A10, A15 | Needs the multi-chat work first (A3, A1), a version handshake (A8), authentication and argument validation (A14), the activity parser fix (A5), a `cwd` per chat (A10), and an explicit bridge choice instead of the silent mock (A15). Detail: [11, What must change first](../11-host-service.md#what-must-change-first); [12, Auth and origin](../12-host-protocol.md#auth-and-origin). |
 ## Recommendations and order
 
 Within each group, the order is the suggested sequence.

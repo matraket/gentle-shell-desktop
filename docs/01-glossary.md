@@ -14,7 +14,7 @@ The shared vocabulary of the corpus. Each term says what it means in the code or
 | [Configuration](#configuration) | effort / thinking level, home (linked / isolated / custom), model, profile, prompt template, provider, settings scope, skill, theme |
 | [Protocol](#protocol) | `extension_ui_request`, `gentle-agents.activity/v1`, interactive host, `notify`, RPC mode, `setWidget` |
 | [Community terms outside scope](#community-terms-outside-scope) | gentle-mesh, Herdr |
-
+| [Host service (proposal 0004)](#host-service-proposal-0004) | client, endpoint record, host protocol, host service, pairing, placement (a) / (b), topology T1–T5 |
 ## How to read citations
 
 Citations use `repo@shortsha:path:line`. Pinned SHAs (refreshed 2026-10-03): `gentle-shell-desktop@5ab4a00` (main), `gentle-shell@ac67159` (gentle-shell `main`, npm package `gentle-pi` version 4.0.0; facts from after the 4.0.0 release commit `1f35ab1` are marked as post-release), `pi@a13d35a` (pi 1.0.0), `pi@d981de1` (pi 0.85.1, the desktop's in-process copy), `gentle-ai@ff77164` (gentle-ai v4.0.0, the version gentle-shell 4.0.0 installs). The previous pins `gentle-shell@1162ce9` (3.7.0), `gentle-ai@6dee8f8` (v3.7.0) and `pi@d86654a` (0.99.1) appear only in explicit version comparisons. Short keys keep the tables readable:
@@ -99,8 +99,22 @@ These names come up in the community thread. They are not part of the pinned eco
 
 | Term | What is known | Evidence |
 |---|---|---|
-| **gentle-mesh** | A community protocol proposal for agent-to-agent delegation, with "desktop" and "mobile" front ends mentioned. It is not a Gentleman-Programming repository. | Discord: memoTux, 26/9/26; Rafael The Hutt, 27/9/26 (links `github.com/Rafaeldelinares/gentle-mesh`) |
-| **Herdr** | An external tool gentle-shell integrates with: for an interactive isolated-home launch inside Herdr, the launcher loads an existing managed `extensions/herdr-agent-state.ts` bridge, if one is found; it is skipped for RPC modes, and an absent bridge is nonfatal. The community cited it as a lightweight reference, and a `herdr-web-ui` project was linked as a comparison. | `GS:docs/readme-reference.md:378-382`; [05 L11](05-capability-inventory.md#launcher-and-homes); Discord: Rafael The Hutt, 27/9/26 and 30/9/26 |
+| **gentle-mesh** | A community protocol proposal for agent-to-agent delegation, with "desktop" and "mobile" front ends mentioned. It is not a Gentleman-Programming repository. [Proposal 0004](07-proposals/0004-host-service.md#optional-remote-execution-gentle-mesh) **[community]** places it as optional remote execution behind the host service ([topology T4](13-clients-and-topologies.md#t4-remote-execution-behind-the-service-gentle-mesh-later)), pending its author's answers and the maintainer's approval. | Discord: memoTux, 26/9/26; Rafael The Hutt, 27/9/26 (links `github.com/Rafaeldelinares/gentle-mesh`) |
+| **Herdr** | An external tool gentle-shell integrates with: for an interactive isolated-home launch inside Herdr, the launcher loads an existing managed `extensions/herdr-agent-state.ts` bridge, if one is found; it is skipped for RPC modes, and an absent bridge is nonfatal. The community cited it as a lightweight reference, and a `herdr-web-ui` project was linked as a comparison. Proposal 0004 assesses the herdr web clients (`kcosr/herdr-web`, `devswha/herdr-web-ui`) under [Alternatives considered and rejected](07-proposals/0004-host-service.md#alternatives-considered-and-rejected). | `GS:docs/readme-reference.md:378-382`; [05 L11](05-capability-inventory.md#launcher-and-homes); Discord: Rafael The Hutt, 27/9/26 and 30/9/26 |
+
+## Host service (proposal 0004)
+
+**[community]** Terms of the shared local host service proposed in [proposal 0004](07-proposals/0004-host-service.md). None of these exists in the desktop today, and nothing here is decided.
+
+| Term | Definition | Where it lives | In the desktop |
+|---|---|---|---|
+| **client** | A UI that connects to the host service over the host protocol: the Electron window (under placement (a)), a browser tab or a future mobile app. | [13 §Clients](13-clients-and-topologies.md#clients) | The only client is the Electron window, over Electron IPC (`D:preload/index.ts:4`). |
+| **endpoint record** | A file in which a running service publishes the address it bound, so a client started later can find it on any port; Paseo's `paseo.pid` is the precedent. A fixed port is the alternative; neither is chosen. | [10 §Port and loopback binding](10-platforms.md#port-and-loopback-binding); [13 §Electron window](13-clients-and-topologies.md#electron-window) | None: no port today. |
+| **host protocol** | The client ↔ service protocol: JSON frames over one WebSocket per client, a `hello` / `welcome` handshake, a `chatId` on chat-scoped frames. Its open questions are HP-01 to HP-07. The service ↔ gentle-shell contract stays [04](04-rpc-contract.md). | [12-host-protocol.md](12-host-protocol.md) | Electron IPC: 8 request and 2 push channels (`D:shared/ipc-channels.ts:8-23`). |
+| **host service** | One local process between every Gentle Shell UI and `gentle-shell --mode rpc`: session registry, children, one versioned protocol, authentication. Not the "shared host" of vision Q3, which is one runtime process serving several chats. | [proposal 0004](07-proposals/0004-host-service.md); [11-host-service.md](11-host-service.md) | Electron main holds one session (`D:main/domain/session/ChatHost.ts:70`). |
+| **pairing** | Authorizing a device once, through a link or QR code, so it holds its own credential that can be revoked; one option for auth beyond loopback (HP-02). | [12 §Auth and origin](12-host-protocol.md#auth-and-origin); [13 §Future mobile app](13-clients-and-topologies.md#future-mobile-app) | None. |
+| **placement (a) / (b)** | Where the host service runs: (a) a separate process, (b) embedded in Electron main. Open. | [11 §Process placement (open)](11-host-service.md#process-placement-open) | The session host runs in Electron main, with no socket. |
+| **topology T1–T5** | Where clients, service and runtime run: T1 loopback on one machine, T2 remote access to your own machine, T3 service inside WSL, T4 remote execution behind the service (gentle-mesh, later), T5 hosted multi-user (out of scope). Outside 13, write `topology T1`, because `inventory T1` exists. | [13 §Topologies](13-clients-and-topologies.md#topologies) | None. |
 
 ## Related documents
 

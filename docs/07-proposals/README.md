@@ -16,7 +16,6 @@ Community ideas that go beyond parity with gentle-shell. They live here, apart f
 IDs from other documents are qualified, because they collide (inventory A1–A12 and U1–U8, audit A1–A21, UX U1–U12): `gap G1` is from the [RPC contract](../04-rpc-contract.md#gaps-the-desktop-needs), `inventory C4` from the [capability inventory](../05-capability-inventory.md), `audit A5` from the [architecture audit](../03-architecture/audit.md#findings), `vision P10` and `vision Q5` from the [vision](../00-vision.md), `UX U2` from the [UX principles](../06-ux/principles.md). A qualifier covers the IDs listed after it (`inventory C4, A6`).
 
 ## Process
-
 1. **Write.** One file per proposal, `NNNN-short-name.md`, with: Problem, Proposal, Runtime requirements, Prior art in the ecosystem, Status, Author and source.
 2. **Ground it.** Runtime requirements cite the RPC contract gaps and inventory rows they depend on. Prior art lists only what can be verified in the pinned repositories.
 3. **Propose.** Open a pull request with the file at status `proposed`, and add it to the index.
@@ -37,8 +36,8 @@ Ideas raised in the Discord thread "Gentle Desktop" with no proposal file. They 
 |---|---|---|---|
 | Infinite canvas with agents | eSagraDEV | 2026-09-26 | Starting a project of his own, "un canvan infinito, con agentes, navegador integrado, etc.." |
 | Integrated browser | eSagraDEV | 2026-09-26, 2026-09-27 | Same message; later, adding "el navegador integrado de hermes agent" so it can be used from gentle shell. |
-| gentle-mesh for mobile and remote agents | memoTux; Rafael The Hutt | 2026-09-26; 2026-09-27 | memoTux: "Gentle Mesh pensamientos para moviles", with desktop and mobile front ends. Rafael: a multiplatform, lightweight app with access to remote agents over VPN, and the gentle-mesh protocol (`github.com/Rafaeldelinares/gentle-mesh`). |
+| gentle-mesh for mobile and remote agents | memoTux; Rafael The Hutt | 2026-09-26; 2026-09-27 | memoTux: "Gentle Mesh pensamientos para moviles", with desktop and mobile front ends. Rafael: a multiplatform, lightweight app with access to remote agents over VPN, and the gentle-mesh protocol (`github.com/Rafaeldelinares/gentle-mesh`). Now covered in part by [0004](0004-host-service.md#optional-remote-execution-gentle-mesh): optional remote execution behind the host service ([topology T4](../13-clients-and-topologies.md#t4-remote-execution-behind-the-service-gentle-mesh-later)), pending its author's answers and the maintainer's approval. |
 | Verifiable delegation between agents | Rafael The Hutt | 2026-09-27 | gentle-mesh RFC-002: delegation with an explicit contract and verifiable execution, against the "Green Checkbox" fallacy (an agent claims success and nobody checks). |
-| herdr-web-ui as a comparison | Rafael The Hutt | 2026-09-30 | Linked `github.com/devswha/herdr-web-ui` and asked how it compares with gentle-desktop. |
+| herdr-web-ui as a comparison | Rafael The Hutt | 2026-09-30 | Linked `github.com/devswha/herdr-web-ui` and asked how it compares with gentle-desktop. Assessed in [0004, Alternatives considered and rejected](0004-host-service.md#alternatives-considered-and-rejected). |
 
 Dates are converted from the thread's `d/m/yy` format. Source: Discord thread "Gentle Desktop" (saved copy, not in the repository).
