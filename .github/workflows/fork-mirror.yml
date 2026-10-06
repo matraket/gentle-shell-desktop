@@ -1,0 +1,19 @@
+# Fork-only check: never delivered upstream (.fork/export-upstream.sh filters it out).
+name: fork-mirror
+on:
+  pull_request:
+    branches: [docs/integration]
+permissions:
+  contents: read
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Spanish mirror matches the English corpus line by line
+        run: python3 .fork/check-mirror.py --changed-since "${{ github.event.pull_request.base.sha }}"
+      - name: No bare #N in commit messages
+        run: python3 .fork/check-messages.py "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
