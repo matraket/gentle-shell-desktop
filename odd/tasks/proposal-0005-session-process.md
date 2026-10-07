@@ -22,9 +22,9 @@ Move the session-process design from PR #30 into a numbered, community-authored 
 |---|---|---|---|---|
 | P1 | Write the English proposal and both index entries, plus the Spanish mirror; preserve attribution and open decisions | delegated `gentle-ai-worker` (multi-file write trigger) | done | Added `docs/07-proposals/0005-session-process-design.md`, its `docs-es/` mirror, and both index rows. Original PR #30 author @memotux credited/signed; two-process correction and issues #2–#9 preserved. |
 | P2 | Verify mirror parity, diff hygiene, citations, relative links, and proposal neutrality; record observed results | parent + independent `gentle-ai-verify` (ASSESS unassessable/high due to untracked paths) | done | Writer and independent verifier: `python3 .fork/check-mirror.py --changed-since docs/integration` → 38 pairs, 0 problems; `git diff --check` → exit 0. Relative links, PR #30 citations, attribution, language parity, and neutrality checked. Parent spot-checks issues #2/#4/#7. Native inspect required intended-untracked selection; selecting the two proposal files and this task file returned terminal `action: closed`, `risk_tier: low`, `lenses_required: false` (not delivery authority). |
-| P3 | Commit this work unit | parent | in progress | User authorized the commit. Stage only the five intended files; do not push. |
-| P5 | Prepare the issue-scoped PR | parent | pending | PR creation remains unauthorized; wait for explicit user authorization. |
+| P3 | Commit this work unit | parent | done | Commit `82d99cf4ee9b2ee3f01f51f0459246ec9a39c623` (`docs: add proposal 0005 for per-chat session processes`) records the five intended files. No push. |
 | P4 | Normalize proposal source references to `PR #30` / `pr30:` only | delegated `gentle-ai-worker` (multi-file correction) | done | English/Spanish proposal source rows and notes now use only PR #30 plus `pr30:` citations. Independent verification and mirror checks passed. Final native start returned low-risk terminal closure with no review lenses required. |
+| P5 | Prepare the issue-scoped PR | parent | in progress | PR creation remains unauthorized; wait for explicit user authorization. |
 
 ## Acceptance criteria
 
@@ -44,4 +44,5 @@ Move the session-process design from PR #30 into a numbered, community-authored 
 - Native inspect resolved the intended-untracked selection and returned a terminal low-risk closure with no review lenses required. This is not commit, PR, or delivery authorization.
 - P4 completed after the user's citation-convention clarification; proposal and tracking text use only `PR #30` and `pr30:` for this source. Independent verification and a parent grep confirmed no other source identifier in the proposal, indexes, or tracking document; mirror check stayed at 38 pairs / 0 problems and `git diff --check` stayed clean.
 - The latest native start returned `state: approved`, `risk_tier: low`, `action: closed`, and `lenses_required: false` for this five-file candidate. No subsequent lifecycle call was made.
-- The user explicitly authorized a commit for this work unit. Push and PR creation remain unauthorized.
+- The user authorized the work-unit commit. Commit `82d99cf4ee9b2ee3f01f51f0459246ec9a39c623` was created with message `docs: add proposal 0005 for per-chat session processes`; committed-range ASSESS against `docs/integration` returned passive risk, 5 changed paths, and structural readback only. No push or PR creation authorized.
+- P5 is waiting for separate explicit authorization before opening the issue-scoped PR.
