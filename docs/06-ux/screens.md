@@ -326,6 +326,17 @@ Every inventory row is either on a screen above or listed here (checked by diffi
   - **SCR-18 Diagnostics and About.** `Inference:` it could show the service's own version, its protocol version and the gentle-shell and pi versions the service reports in the `welcome` handshake ([12, Handshake and versions](../12-host-protocol.md#handshake-and-versions)), on top of SCR-18's existing blockers, gap G10 and audit A8.
   - **A connection screen for remote clients?** `Inference:` a browser tab or phone that cannot reach the service, or is not yet paired, has nothing to show today. Whether it needs its own screen (address, pairing, retry) is open and depends on vision Q9 and CT-01 ([13, Open questions](../13-clients-and-topologies.md#open-questions)).
 
+## Authority contracts per screen
+
+> Status: from PR #30 (`pr30:docs/frontend-renderer-design.md:71-109`), which defines renderer/main ownership for the screens the desktop builds first. `Inference:` these are product and security contracts, not implementation facts; PR #30 itself calls them proposals until confirmed (`pr30:docs/frontend-renderer-design.md:7`).
+
+- **SCR-01 to SCR-06 (Chats screen).** The renderer renders a conversation-scoped projection of messages, progress, dialogs and lifecycle state. It never receives raw RPC records, child handles, process output or a generic IPC channel; actions go through named, validated preload operations (`pr30:docs/frontend-renderer-design.md:56-58`). `Inference:` streamed content and terminal run completion are different events, so a successful prompt request means accepted/queued, not completed.
+- **SCR-07 Providers.** The renderer receives safe provider display data and operation outcomes only; never API keys, tokens, credential files or child-process environment values. Main owns credential handling and configuration authority. If a provider or model selection affects new RPC children, main applies it at launch with controlled configuration, not renderer-supplied environment variables or CLI arguments (`pr30:docs/frontend-renderer-design.md:71-75`).
+- **SCR-08 Extensions.** Extension management operations are explicit, scoped, validated app operations. Package names and local paths are untrusted input; the renderer gets no generic filesystem access and no arbitrary package execution through preload (`pr30:docs/frontend-renderer-design.md:89`).
+- **SCR-09 First run.** The renderer presents the detected state and collects the setup choice; it does not resolve arbitrary filesystem paths, inspect secrets or modify pi configuration. Main resolves the launcher, home, session configuration, working directory and allowlisted child environment, and persists the choice as app configuration applied when sessions launch (`pr30:docs/frontend-renderer-design.md:107-109`).
+
+SCR-10 to SCR-19 have no PR #30 contract; `Inference:` each needs one before implementation.
+
 ## Sources read
 
 `gs-mockup.html` L459–909; `gentle-shell-desktop@5ab4a00:src/renderer/**`, `src/shared/bridge-types.ts`, `src/main/domain/session/sessionList.ts`, `src/main/domain/rpc/chatReducer.ts` (via 04); `docs/04-rpc-contract.md`, `docs/05-capability-inventory.md`, `docs/03-architecture/audit.md`, `docs/00-vision.md`, `docs/10-platforms.md` (refreshed to pi 1.0.0 and gentle-shell `main` at `ac67159`, package version 4.0.0, on 2026-10-03).
