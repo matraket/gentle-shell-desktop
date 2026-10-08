@@ -2,6 +2,8 @@
 
 > Status: draft (community proposal, awaiting maintainer validation).
 
+> **Authors:** @matraket (corpus and existing roadmap) and @memotux (roadmap-discipline contribution, based on PR #30).
+
 > **Community proposal derived from the corpus.** The maintainer asked the community to present a roadmap, divide tasks and present PRs **[maintainer]** (Discord, Alan Buscaglia, 2026-09-27). This page is that roadmap, derived from the other corpus pages. The maintainer's milestone names M1 to M6 are kept as he wrote them. Every new milestone, every ordering and every exit criterion here is **[community proposal]**: ordering and scope need maintainer validation.
 
 **In one paragraph.** The maintainer delivered M1 (chat core) and M2 (per-chat helpers) and named four more milestones: M3 ODD panel, M4 providers and extensions screens, M5 signing and auto-update, M6 notifications and status bar (`gentle-shell-desktop@5ab4a00:odd/tasks/desktop-m1-chat-core.md:22`; `gentle-shell-desktop@5ab4a00:README.md:3`, `:63-64`). The corpus adds two prerequisite milestones, **F1 Foundations** (several chats at once) and **F2 Platform baseline** (Windows, Linux and CI). The audit's risk table ties the single-session host (audit A3) to M3 and blocks Windows and Linux releases on audit A4, A16, A18 ([audit §Risks](03-architecture/audit.md#risks-for-scaling-the-ui), `03-architecture/audit.md:383`, `:386`); the M6 toasts about other chats also need several running chats (SCR-06 blockers, `06-ux/screens.md:148`). M4 is tied to audit A2 and A8, not to audit A3 (`03-architecture/audit.md:385`). It also lists **quick wins**: small desktop-only fixes that need no upstream change and no open decision.
@@ -15,7 +17,7 @@
 | `Inference:` | Reasoning from cited evidence, not a stated fact. |
 | `UNVERIFIED:` | Checked but not confirmed. |
 
-- **Citation keys.** `gentle-shell-desktop@5ab4a00:` is the desktop repo `main`; `gentle-shell@ac67159:` is gentle-shell `main` at `ac67159` (package version 4.0.0); `pi@a13d35a:` is pi 1.0.0. Refreshed 2026-10-03 from `gentle-shell@1162ce9` (3.7.0) and `pi@d86654a` (0.99.1); desktop issues #23–#25 and open PRs #26 and #27 were read on GitHub that day. `desktop-m1-chat-core.md` and `desktop-m2-helpers.md` are short for `gentle-shell-desktop@5ab4a00:odd/tasks/<file>`. Under [Quick wins](#quick-wins), paths that start with `src/`, `scripts/` or `.github/` are in `gentle-shell-desktop@5ab4a00`. Paths such as `03-architecture/audit.md:384` are corpus pages in `docs/`. `roadmap.txt:<line>` is memoTux's earlier roadmap (saved copy, not in the repository).
+- **Citation keys.** `gentle-shell-desktop@5ab4a00:` is the desktop repo `main`; `gentle-shell@ac67159:` is gentle-shell `main` at `ac67159` (package version 4.0.0); `pi@a13d35a:` is pi 1.0.0. Refreshed 2026-10-03 from `gentle-shell@1162ce9` (3.7.0) and `pi@d86654a` (0.99.1); desktop issues #23–#25 and open PRs #26 and #27 were read on GitHub that day. `desktop-m1-chat-core.md` and `desktop-m2-helpers.md` are short for `gentle-shell-desktop@5ab4a00:odd/tasks/<file>`. Under [Quick wins](#quick-wins), paths that start with `src/`, `scripts/` or `.github/` are in `gentle-shell-desktop@5ab4a00`. Paths such as `03-architecture/audit.md:384` are corpus pages in `docs/`. `roadmap.txt:<line>` is memoTux's earlier roadmap (saved copy, not in the repository). PR #30 is cited as `pr30:docs/roadmap-memotux.md:<line>`.
 - **Qualified IDs.** IDs from other pages carry their page: `audit A4`, `gap G2`, `inventory S1`, `vision Q3`, `UX U3`, `ADR 0007`, `SCR-04`. A qualifier covers the IDs after it (`audit A3, A11`). Unqualified **M1–M6** are the maintainer's milestones, not inventory rows M1–M13. **F1**, **F2**, `QW-##` and `DEP-##` belong to this page; `PLAT-##` are the risks in [10-platforms.md](10-platforms.md#risks).
 - **Repo checks.** "The repo checks" means `pnpm test`, `pnpm typecheck`, `pnpm build` and `pnpm smoke:electron`, the checks M2 used as acceptance criteria (`gentle-shell-desktop@5ab4a00:odd/tasks/desktop-m2-helpers.md:43`; scripts at `gentle-shell-desktop@5ab4a00:package.json:13-22`).
 - **No dates and no effort estimates.** No corpus source gives any.
@@ -215,6 +217,59 @@ Hexagons are maintainer decisions, slanted boxes are upstream gaps (owners per 0
 4. **M6 can start before F1.** `Inference:` its partial edges (DEP-03, DEP-04) leave exit criterion 3 free of both F1 and upstream work; the toasts about other chats and the selected-chat status bar wait on F1.
 5. **M5 is off the critical path.** Its only edges, F2 and vision Q2 (DEP-12, DEP-13), are both `Inference:`; memoTux's roadmap also called it orthogonal ("M5 is orthogonal", `roadmap.txt:89`).
 
+## Sequencing principles
+
+The order in [At a glance](#at-a-glance) is a **[community proposal]**; these principles explain how to read it, not a new order. Adapted from PR #30's sequencing strategy (`pr30:docs/roadmap-memotux.md:20-35`), remapped to this page's gates; the milestone shape is unchanged.
+
+1. **Gates before consumers.** A milestone starts when its DEP edges clear: vision Q3 → F1 → M3, with gap G2 as M3's second gate (DEP-02, DEP-05, DEP-06).
+2. **Partial gates unblock partial work.** A "partial" edge gates only the listed criteria: `notify` toasts (M6 exit criterion 3) need neither F1 nor upstream work (DEP-03, DEP-04).
+3. **Evidence before rewrites.** CI ([QW-04](#qw-04-ci-workflow-audit-a16)) protects the F1 session-host rewrite (DEP-01); exit criteria demand real fixtures where audit A16 asks for them (M3 exit criterion 2).
+4. **No screen before its contract.** The M3 panel waits on the gap G2 format (DEP-06); the M4 screens wait on gap G3–G5 (DEP-09) and vision Q4 (DEP-08).
+5. **Identity sequencing is unresolved.** PR #30 migrates to a durable cursor before its multi-session registry (`pr30:docs/roadmap-memotux.md:29-31`); this page keeps stable message ids inside F1 (exit criterion 4) and does not adopt that split. See the debt-register note.
+
+## Debt register
+
+This register is an accountability crosswalk for PR #30's five structural debts (`pr30:docs/roadmap-memotux.md:240-244`), plus the two deferred hygiene findings. **[community proposal]**. PR #30 uses its own M0 milestone numbering: its M0 decision table refers to a nonexistent later M7; this target has no M7 milestone (unqualified `M7` on this page is inventory row M7, sign-in) — and its M0 decision gate maps to this page's vision Q-gates and upstream gaps, not to a milestone. Every other finding stays assigned in its milestone, quick-win, or not-scheduled section above; this register does not re-list them.
+
+| Debt | Pays or defers | Closure evidence |
+|---|---|---|
+| Two access paths to pi data, CLI vs in-process (PR #30 debt #1; audit A1) | Deferred, unassigned | No current target milestone proves home-consistent conversation identity; closure needs one registry-owned identity covering both the spawned child and the in-process `listAll()` path, with no global env mutation (F1 exit criteria 3 and 5 cover chat ids and the env mutation but not the convergence) |
+| Global env mutation and session-list race (PR #30 debt #2; audit A1) | QW-03, then F1 | Serialized `listAll()` with a test that overlapping calls never leave `PI_CODING_AGENT_DIR` set (QW-03); F1 exit criterion 5 |
+| Single-session host, no registry (PR #30 debt #3; audit A3) | F1 (exit criteria 2–3) | Two chats run with per-chat state; every push and command carries a chat id |
+| Position-derived message ids (PR #30 debt #4; audit A3) | F1 (exit criterion 4; current home, sequencing unresolved — see note) | Ids from pi survive a reload |
+| Launcher and runtime version coupling (PR #30 debt #5; audit A8) | Recurring release gate (item 2) and F1 (exit criterion 7); below-minimum policy gated by vision Q6 | Smoke runs against pi 0.99.1+, enforced by the launcher (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`); versions shown from `gentle-shell --version`; warn-below-minimum waits on the Q6 compatibility policy (`00-vision.md:132`) |
+| audit A20 Chromium scrollbar behavior | Deferred hygiene | One mechanism per engine verified in the packaged app (`::-webkit-scrollbar` rules inside `@supports selector(::-webkit-scrollbar)`, standard properties inside `@supports not selector(::-webkit-scrollbar)`) |
+| audit A21 scrollbar thumb contrast | Deferred hygiene | Token-only thumb colour reaching at least 3:1 contrast on every panel background |
+
+Note: PR #30 migrates to a durable cursor before its multi-session registry (`pr30:docs/roadmap-memotux.md:29-31`, `:120-141`); this page keeps both inside F1 (exit criterion 4) and treats PR #30's order as a community proposal, not an accepted decision. F1 is the current target home for stable message identity; the sequencing question stays open for the maintainer.
+
+## Invariants and change protocol
+
+The invariants are proposed constraints **[community proposal]**; only the maintainer moves them. Adapted from PR #30 (`pr30:docs/roadmap-memotux.md:248-276`) with this page's milestone names.
+
+Scope note: this issue preserves the current milestone shape because decision #10 (roadmap shape) is unresolved — that is not a permanent invariant. Renaming or reordering milestones belongs to decision #10.
+
+1. **Full gates before consumers; partial gates gate only listed criteria.** Vision Q3 → F1 → M3 (DEP-02, DEP-05); M6 criterion 3 stays free of F1 (DEP-03).
+2. **No screen ships on an unconfirmed contract.** M3 content waits on gap G2 (DEP-06); M4 waits on gap G3–G5 and vision Q4 (DEP-08, DEP-09).
+3. **User-data boundaries hold.** The user's pi `settings.json` is never edited (vision P3; M4 exit criterion 5); credentials never cross the renderer boundary (`Inference:` from M4's design).
+
+**Change protocol.** Re-sequencing is a maintainer decision recorded with its reason, never a silent edit:
+
+- **Triggers:** a failed assumption (a vision decision resolves differently than assumed); a pi major upgrade (the release gate re-runs first); an incident in a debt area (the owning milestone pulls forward); new evidence on an open question.
+- **Impact review:** re-check the DEP table, the debt register and the affected exit criteria before moving work.
+- **Authority:** the maintainer decides; community proposals stay labelled **[community proposal]**.
+- **Synchronized updates:** English and Spanish change in the same work unit, enforced by `.fork/check-mirror.py`.
+
+## Release gate
+
+A recurring qualification checklist that runs at every release, not a milestone. **[community proposal]**. Adapted from PR #30 (`pr30:docs/roadmap-memotux.md:201-215`); platform claims kept to what the sources evidence.
+
+1. The repo checks pass, evidenced by a CI run where CI exists (QW-04, F2) and by recorded local runs until then (`pnpm test`, `pnpm typecheck`, `pnpm build`, `pnpm smoke:electron`).
+2. An end-to-end run against a real pi passes, as M2 did (`gentle-shell-desktop@5ab4a00:odd/tasks/desktop-m2-helpers.md:57-59`), against pi 0.99.1 or newer — the launcher refuses older pi (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`). A smoke pinned to 0.87.1 would be stale: 0.87.1 is below the launcher's floor.
+3. A packaged smoke opens, starts a chat and shuts down cleanly on every platform that release ships; only macOS Apple silicon is tested today (`gentle-shell-desktop@5ab4a00:README.md:7`), and Windows and Linux releases are blocked on audit A4, A16, A18 (`03-architecture/audit.md:386`). No CI capability beyond the evidenced workflows is claimed.
+4. The shipped gentle-shell and pi versions are recorded and verified; UI confirmation of the versions follows F1 (exit criterion 7 reads them from `gentle-shell --version`). Below-minimum behavior follows vision Q6 (`00-vision.md:132`), which is unresolved.
+5. **Failure handling:** a failed gate blocks the release; the failure and its owning milestone or decision are recorded before any re-run.
+
 ## Quick wins
 
 A quick win here is a change that is **desktop-only** (no upstream change), **needs no open decision**, is **small** (one finding, a few files), and **fixes a cited audit finding or a maintainer follow-up**. All of them are **[community proposal]**.
@@ -338,4 +393,4 @@ memoTux wrote the first community roadmap, deduced from the README and the M1 an
 
 ## Sources read
 
-[issue #28](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28) ("Author's framing" sections); `roadmap.txt` (memoTux's attachment in the Discord thread "Gentle Desktop", 2026-09-29); `docs/README.md`, `docs/00-vision.md`, `docs/02-ecosystem.md`, `docs/03-architecture/audit.md`, `docs/03-architecture/adr/README.md`, `docs/04-rpc-contract.md` (gaps, upstream process), `docs/05-capability-inventory.md` (coverage summary, columns, row IDs and status cells), `docs/06-ux/screens.md`, `docs/06-ux/principles.md` and `design-system.md` (headings), `docs/07-proposals/` (index and headings), `docs/08-team.md`; `gentle-shell-desktop@5ab4a00:README.md`, `odd/tasks/desktop-m1-chat-core.md`, `odd/tasks/desktop-m2-helpers.md`, `package.json`, `.github/ISSUE_TEMPLATE/*.yml`, and the source files cited under [Quick wins](#quick-wins); `odd/tasks/docs-corpus.md` on `docs/corpus`; `gentle-shell@ac67159:lib/gentle-shell-launcher.ts:969-1019`, `tests/gentle-shell-launcher.test.ts` (search for `planSpawn`). Refresh of 2026-10-03: `docs/10-platforms.md` (risks, open questions), the refreshed `docs/00-vision.md`, `docs/02-ecosystem.md`, `docs/03-architecture/audit.md`, `docs/04-rpc-contract.md` and `docs/05-capability-inventory.md`; desktop PRs #26 and #27 and issues #23–#25 on GitHub; `pi@a13d35a:CONTRIBUTING.md`, `packages/coding-agent/src/core/session-manager.ts`.
+[issue #28](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28) ("Author's framing" sections); `roadmap.txt` (memoTux's attachment in the Discord thread "Gentle Desktop", 2026-09-29); `docs/README.md`, `docs/00-vision.md`, `docs/02-ecosystem.md`, `docs/03-architecture/audit.md`, `docs/03-architecture/adr/README.md`, `docs/04-rpc-contract.md` (gaps, upstream process), `docs/05-capability-inventory.md` (coverage summary, columns, row IDs and status cells), `docs/06-ux/screens.md`, `docs/06-ux/principles.md` and `design-system.md` (headings), `docs/07-proposals/` (index and headings), `docs/08-team.md`; `gentle-shell-desktop@5ab4a00:README.md`, `odd/tasks/desktop-m1-chat-core.md`, `odd/tasks/desktop-m2-helpers.md`, `package.json`, `.github/ISSUE_TEMPLATE/*.yml`, and the source files cited under [Quick wins](#quick-wins); `odd/tasks/docs-corpus.md` on `docs/corpus`; `gentle-shell@ac67159:lib/gentle-shell-launcher.ts:969-1019`, `tests/gentle-shell-launcher.test.ts` (search for `planSpawn`). Refresh of 2026-10-03: `docs/10-platforms.md` (risks, open questions), the refreshed `docs/00-vision.md`, `docs/02-ecosystem.md`, `docs/03-architecture/audit.md`, `docs/04-rpc-contract.md` and `docs/05-capability-inventory.md`; desktop PRs #26 and #27 and issues #23–#25 on GitHub; `pi@a13d35a:CONTRIBUTING.md`, `packages/coding-agent/src/core/session-manager.ts`; PR #30 with `pr30:docs/roadmap-memotux.md`.
