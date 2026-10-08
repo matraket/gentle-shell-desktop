@@ -25,8 +25,8 @@ Carry the approved roadmap-discipline proposal for issue #18 into the English ro
 ## Tasks
 - [x] **T1 — Integrate approved discipline in both roadmaps.** Added the approved material and corrections to `docs/09-roadmap.md` and `docs-es/09-roadmap.md` as one bilingual work unit. Route: delegated writer (2 non-trivial files); parent reconciled the final diff.
 - [x] **T2 — Verify and record evidence.** Independent verifier and parent checked mirror structure, Markdown, citations, and diff. Route: delegated verifier after native assessment failed validation.
-- [ ] **T3 — Close the work unit with a commit.** Commit under the configured memoTux identity; no redundant self co-author trailer.
-- [ ] **T4 — Push and draft PR metadata.** Push to `roadmap` is authorized; PR draft should use `Closes #18`. Obtain explicit current Git credential/session authorization before push; do not open the PR.
+- [x] **T3 — Close the work unit with a commit.** Commit `ccf358c` (`docs(roadmap): add bilingual roadmap discipline`) under the configured memoTux identity; no redundant self co-author trailer.
+- [ ] **T4 — Push and draft PR metadata.** Push to `roadmap` is authorized; PR draft should use `Closes #18`. Prepare title/body locally, then obtain explicit current Git credential/session authorization before push; do not open the PR.
 
 ## Acceptance criteria
 - English roadmap states reusable sequencing principles and links their rationale to current gates/dependencies without changing roadmap shape.
@@ -47,6 +47,6 @@ Carry the approved roadmap-discipline proposal for issue #18 into the English ro
 - T1: complete. English and Spanish roadmaps now contain sequencing principles, the concise debt crosswalk, proposed invariants and change protocol, and the recurring release gate; corrections and attribution are included.
 - T2: complete. `python3 .fork/check-mirror.py`: 37 pairs checked, 0 problems. `git diff --check -- docs/09-roadmap.md docs-es/09-roadmap.md`: exit 0. Independent verifier verdict: PASS; no high/blocking findings. Parent read the final diff and confirmed only the two roadmaps plus this task record are changed/untracked.
 - Failed/unavailable check: native ASSESS returned a controller validation error rejecting inspect-only `intendedUntracked` input. The change was therefore independently verified under the fail-closed high-risk route. No native review was started because the user explicitly said no review was needed.
-- Commit: explicitly authorized by the user; local identity is `memoTux <romeo@mendezfuentes.net>`. User selected omitting a redundant self `Co-authored-by` trailer; the document header retains @memotux credit.
+- Commit: `ccf358c` (`docs(roadmap): add bilingual roadmap discipline`), authored as configured `memoTux <romeo@mendezfuentes.net>`. The user selected omitting a redundant self `Co-authored-by` trailer; the document header retains @memotux credit.
 - Push: authorized to remote `roadmap` (`matraket/gentle-shell-desktop`); PR draft uses `Closes #18`. Await direct authorization to use the configured Git credential/session for the push. PR creation and merge are not authorized.
-- Next: create the local work-unit commit, then confirm Git credential/session authorization and push; provide a draft PR title and description without opening it.
+- Next: read the local PR template and prepare title/body; confirm credential/session authorization before pushing.
