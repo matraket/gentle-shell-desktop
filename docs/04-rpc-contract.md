@@ -434,6 +434,10 @@ process.wait()
 ```
 The client code is `pr30:docs/pi-rpc-mode.md:306-334`.
 
+### Records outside the type unions
+
+`extension_error` is emitted on stdout but is absent from the `rpc-types` unions (`pr30:docs/pi-rpc-mode.md:367-369`). It is documented (`pi@a13d35a:packages/coding-agent/docs/json.md:190-194`) and carries `extensionPath`, `event` and `error` when an extension handler throws (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:348-350`). Treat unknown `type` values as ignorable rather than fatal. See [Events](#events-runtime--desktop) and [Host and extension channels](#host-and-extension-channels).
+
 ## How to propose contract changes upstream
 
 ### pi (`earendil-works/pi`): owns the RPC protocol
