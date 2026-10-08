@@ -20,13 +20,13 @@ Carry the approved roadmap-discipline proposal for issue #18 into the English ro
 - Do not import a source roadmap's sequencing as an accepted decision where it conflicts with the target. In particular, surface the stable-message-ID-before-concurrency mismatch rather than silently changing F1.
 - Distinguish evidence, inference, community proposal, maintainer decisions, full versus partial paydown, and supported versus unqualified platforms.
 - No new product claims, release platform commitments, dates, or effort estimates without cited evidence.
-- The user explicitly authorized the work-unit commit and branch push to `roadmap` (matraket/gentle-shell-desktop), and selected `Closes #18` for the PR draft. Use the configured Git identity; do not add a self co-author trailer. Do not open a PR or merge.
+- The user explicitly authorized the work-unit commit and branch push to `roadmap` (matraket/gentle-shell-desktop), and selected `Closes #18` for the PR draft. Use the configured Git identity; do not add a self co-author trailer. PR #23 was created by the user; no further PR edits or merge were requested.
 
 ## Tasks
 - [x] **T1 — Integrate approved discipline in both roadmaps.** Added the approved material and corrections to `docs/09-roadmap.md` and `docs-es/09-roadmap.md` as one bilingual work unit. Route: delegated writer (2 non-trivial files); parent reconciled the final diff.
 - [x] **T2 — Verify and record evidence.** Independent verifier and parent checked mirror structure, Markdown, citations, and diff. Route: delegated verifier after native assessment failed validation.
 - [x] **T3 — Close the work unit with a commit.** Commit `11e9e53e10f303c09f29871e53289f2f919750a1` (`docs(roadmap): add roadmap discipline`) under the configured memoTux identity; no redundant self co-author trailer.
-- [ ] **T4 — Push and draft PR metadata.** Push to `roadmap` is authorized; PR draft should use `Closes #18`. Prepare title/body locally, then obtain explicit current Git credential/session authorization before push; do not open the PR.
+- [x] **T4 — Push and draft PR metadata.** The user pushed branch `consolidation/roadmap-discipline` to `roadmap`, then created PR #23: https://github.com/matraket/gentle-shell-desktop/pull/23. Draft title and description were prepared in the conversation.
 
 ## Acceptance criteria
 - English roadmap states reusable sequencing principles and links their rationale to current gates/dependencies without changing roadmap shape.
@@ -48,5 +48,6 @@ Carry the approved roadmap-discipline proposal for issue #18 into the English ro
 - T2: complete. `python3 .fork/check-mirror.py`: 37 pairs checked, 0 problems. `git diff --check -- docs/09-roadmap.md docs-es/09-roadmap.md`: exit 0. Independent verifier verdict: PASS; no high/blocking findings. Parent read the final diff and confirmed only the two roadmaps plus this task record are changed/untracked.
 - Failed/unavailable check: native ASSESS returned a controller validation error rejecting inspect-only `intendedUntracked` input. The change was therefore independently verified under the fail-closed high-risk route. No native review was started because the user explicitly said no review was needed.
 - Commit: `11e9e53e10f303c09f29871e53289f2f919750a1` (`docs(roadmap): add roadmap discipline`), authored as configured `memoTux <romeo@mendezfuentes.net>`. The user selected omitting a redundant self `Co-authored-by` trailer; the document header retains @memotux credit.
-- Push: authorized to remote `roadmap` (`matraket/gentle-shell-desktop`); PR draft uses `Closes #18`. Await direct authorization to use the configured Git credential/session for the push. PR creation and merge are not authorized.
-- Next: read the local PR template and prepare title/body; confirm credential/session authorization before pushing.
+- Push: user reported successful push to remote `roadmap` (`matraket/gentle-shell-desktop`); GitHub confirmed the new branch. Neither assistant push attempt executed; no upstream tracking was set by this session.
+- PR #23: https://github.com/matraket/gentle-shell-desktop/pull/23, created by the user. The assistant did not open or edit it.
+- Next: await any requested PR feedback or follow-up.
