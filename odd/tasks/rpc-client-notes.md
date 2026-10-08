@@ -23,12 +23,12 @@ Land the pi client facts of PR #30 in `docs/04-rpc-contract.md` as a section of 
 
 | ID | Task | Route | Status | Evidence |
 |---|---|---|---|---|
-| T1 | Write the client-implementer notes section in `04` (English and Spanish), define `pr30:` on line 17, and commit the work unit | delegated `gentle-ai-worker` (multi-file write trigger); parent commits | pending | — |
-| T2 | Land correction 1 (pi version the notes were checked against) and commit | parent | pending | — |
-| T3 | Land correction 2 (`extension_error` is documented outside the type unions) and commit | parent | pending | — |
-| T4 | Land correction 3 (`prompt` carries `data.disposition`) and commit | parent | pending | — |
-| T5 | Correct inventory C10 in `05` (English and Spanish, single line each) and commit | parent | pending | — |
-| T6 | Independently verify mirror parity, line stability, citation accuracy and diff hygiene | delegated `gentle-ai-verify` + parent | pending | — |
+| T1 | Write the client-implementer notes section in `04` (English and Spanish), define `pr30:` on line 17, and commit the work unit | delegated `gentle-ai-worker` (multi-file write trigger); parent commits | done | Commit `514a750` (`docs: add notes for pi client implementers to the RPC contract`). Section inserted after `04:362` / `docs-es/04:364`, 74 added lines per language; `pr30:` defined on `04:17` in place. Parent review corrected four `pr30` anchors the writer had off by two to four lines (degraded-`ctx.ui` rows to `:258`, `:260`, `:261`, `:262`; launch bullet to `:46-50`) and tightened `:208-210`. |
+| T2 | Land correction 1 (pi version the notes were checked against) and commit | parent | done | Commit `563d206`. Records PR #30 against pi 0.87.1 (`pr30:docs/pi-rpc-mode.md:15-16`), the launcher floor of 0.99.1 (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`, verified as `MIN_PI_VERSION = "0.99.1"` in the installed 4.0.0 package) and gentle-shell 4.0.0 developing against 1.0.0 (`gentle-shell@ac67159:package.json:78`, `:95`). |
+| T3 | Land correction 2 (`extension_error` is documented outside the type unions) and commit | parent | done | Commit `70082a8`. Four added lines per language. `extension_error` confirmed absent from the shipped `dist/modes/rpc/rpc-types.d.ts`, documented at `pi@a13d35a:packages/coding-agent/docs/json.md:190-194` and emitted at `rpc-mode.ts:348-350` (source map). |
+| T4 | Land correction 3 (`prompt` carries `data.disposition`) and commit | parent | done | Commit `c674a6c`. One added line per language in the command caveats; PR #30's example at `:102-105` verified as the pre-0.99.1 response shape. |
+| T5 | Correct inventory C10 in `05` (English and Spanish, single line each) and commit | parent | done | Commit `fd532e2`. Exactly one replaced line per language (`05:180`, `docs-es/05:182`). Line 340 of the same page (CLI argument parsing) was inspected and left unchanged: its claim is CLI-level and still true. |
+| T6 | Independently verify mirror parity, line stability, citation accuracy and diff hygiene | delegated `gentle-ai-verify` + parent | in progress | — |
 | T7 | Native review preflight over the candidate and close with evidence | parent | pending | — |
 
 ## Acceptance criteria
@@ -45,3 +45,6 @@ Land the pi client facts of PR #30 in `docs/04-rpc-contract.md` as a section of 
 
 - Planning complete. Branch `consolidation/rpc-client-notes` created from `docs/integration` (`b6c0eeb`) in the linked worktree `/Volumes/tuxevo/gentle-shell-desktop-issue16`; the main worktree's pending issue #15 change is untouched.
 - Exploration findings recorded before writing: cited-line ceiling of `04` is `:353`; `05` citations reach `:690`; `pr30:` appears nowhere on `docs/integration` yet; the generic PR skill's `status:approved` label does not exist in this repo, so issue #1's branch/PR convention is the authority.
+- T1-T5 are complete as five separate commits: `514a750`, `563d206`, `70082a8`, `c674a6c`, `fd532e2`. Every commit ran `python3 .fork/check-mirror.py --changed-since docs/integration` (37 pairs, 0 problems), `git diff --check` (clean) and a `git diff --unified=0` hunk inspection: one in-place replacement at `04:17` plus one insertion after `04:362` for the section, and single-line replacements at `05:180` for the inventory correction.
+- Citation verification: 16 `pr30:docs/pi-rpc-mode.md` anchors and 9 `pi@a13d35a` source citations were re-verified, `src/` lines through the `sourcesContent` of the shipped `.js.map` files. The writer's anchors for the degraded `ctx.ui` table and the launch bullet were wrong and were corrected before the first commit.
+- Docs-only change: no behavior tests apply. Independent verification is T6; native review preflight is T7.
