@@ -364,7 +364,7 @@ Detalle de la pregunta abierta [Canal del host hacia las funcionalidades de gent
 
 ## Notas para implementadores de clientes pi
 
-Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc-mode.md`), verificados de nuevo contra pi 1.0.0 (`pi@a13d35a`).
+Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc-mode.md`), verificados de nuevo contra pi 1.0.0 (`pi@a13d35a`). La PR #30 se escribió contra pi 0.87.1 (`pr30:docs/pi-rpc-mode.md:15-16`); el lanzador de gentle-shell se niega a arrancar un pi anterior a 0.99.1 (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`) y gentle-shell 4.0.0 se desarrolla contra 1.0.0 (`gentle-shell@ac67159:package.json:95-97`).
 
 ### `RpcClient` (TypeScript)
 
