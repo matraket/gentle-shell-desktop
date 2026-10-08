@@ -16,7 +16,7 @@
 | ¿Hay un handshake de versión? | No. Solo la carga de actividad lleva una etiqueta de esquema (`gentle-agents.activity/v1`). | [Versionado](#versionado-y-compatibilidad) |
 | Mayores carencias (gaps) | Stop de helpers, estado estructurado de ODD, proveedores (providers)/autenticación, gestión de extensiones, estado de perfil (profile)/RDD. | [Carencias](#carencias-que-necesita-el-escritorio) |
 
-**Cómo leer las citas.** Cada afirmación cita `repo@shortsha:path:line`. SHAs fijados (actualizados el 2026-10-03): `gentle-shell-desktop@5ab4a00` (main), `gentle-shell@ac67159` (`main` de gentle-shell, versión de paquete 4.0.0, 19 commits después del commit de la release 4.0.0 `1f35ab1`; los hechos de esos commits se marcan como posteriores a la release), `pi@a13d35a` (pi 1.0.0), `pi@d981de1` (pi 0.85.1, la copia del escritorio en el mismo proceso). `pi@d86654a` (pi 0.99.1) y `gentle-shell@1162ce9` (3.7.0) solo aparecen en comparaciones explícitas de versiones. Las líneas etiquetadas como `Inference:` son razonamiento, no comportamiento verificado. `UNVERIFIED:` marca afirmaciones que se comprobaron pero no se confirmaron. Los IDs de otras páginas van cualificados (`audit A5`, `inventory Y4`); G1–G10 sin cualificar son las carencias de esta página.
+**Cómo leer las citas.** Cada afirmación cita `repo@shortsha:path:line`. SHAs fijados (actualizados el 2026-10-03): `gentle-shell-desktop@5ab4a00` (main), `gentle-shell@ac67159` (`main` de gentle-shell, versión de paquete 4.0.0, 19 commits después del commit de la release 4.0.0 `1f35ab1`; los hechos de esos commits se marcan como posteriores a la release), `pi@a13d35a` (pi 1.0.0), `pi@d981de1` (pi 0.85.1, la copia del escritorio en el mismo proceso). `pi@d86654a` (pi 0.99.1) y `gentle-shell@1162ce9` (3.7.0) solo aparecen en comparaciones explícitas de versiones. Las líneas etiquetadas como `Inference:` son razonamiento, no comportamiento verificado. `UNVERIFIED:` marca afirmaciones que se comprobaron pero no se confirmaron. Los IDs de otras páginas van cualificados (`audit A5`, `inventory Y4`); G1–G10 sin cualificar son las carencias de esta página. `pr30:` cita la [PR #30](https://github.com/Gentleman-Programming/gentle-shell-desktop/pull/30) en su último commit `cd6d72f` (base `5ab4a00`).
 
 ## Transporte y delimitación de registros
 
@@ -361,6 +361,80 @@ Detalle de la pregunta abierta [Canal del host hacia las funcionalidades de gent
 | **A. Ampliar el `RpcCommand` de pi** | pi, y después gentle-shell para implementarlo y el escritorio para consumirlo. El núcleo de pi es mínimo y los puntos de enganche de las extensiones "should be well considered and discussed" (`pi@a13d35a:CONTRIBUTING.md:7-11`); un contribuidor nuevo presenta una issue `Contribution Proposal`, "required for new contributors before submitting a PR" (`pi@a13d35a:.github/ISSUE_TEMPLATE/contribution.yml:1-2`), y necesita `lgtm` antes de una PR (`pi@a13d35a:CONTRIBUTING.md:29-34`, `:58`); los cambios de mayor envergadura pasan por RFC (`:101-102`). | Comandos tipados con una `response` correlacionada, ya sea uno por funcionalidad o un paso directo (passthrough) genérico de extensiones; ambos son nuevos (PC`src/modes/rpc/rpc-types.ts:20-74`; PC`src/modes/rpc/rpc-mode.ts:713-716`). | Tipos de evento tipados nuevos, si pi los acepta. | `Inference:` necesita una revisión upstream de pi antes de que gentle-shell pueda implementarlo, y puede rechazarse en virtud de la regla de núcleo mínimo de pi. `Inference:` el escritorio dependería de una release de pi por encima de la versión mínima actual, 0.99.1 (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`), sin ningún handshake de versión para detectarla ([Versionado](#versionado-y-compatibilidad)). `UNVERIFIED:` no se encontró ninguna política de estabilidad ni de compatibilidad del RPC para pi; su changelog registra cambios aditivos del RPC (PC`CHANGELOG.md:129`, pi 0.99.0) y anota cuándo "the supported local SDK and stdio RPC API are unchanged" (`:371`, pi 0.85.1). |
 | **B. Canales de extensión de pi existentes, con esquemas versionados** | gentle-shell (más el escritorio); sin cambios en pi. gentle-shell no tiene `CONTRIBUTING.md` y recibe las solicitudes de funcionalidad mediante su formulario de issue ([proceso de gentle-shell](#gentle-shell-gentleman-programminggentle-shell-paquete-gentle-pi-responsable-de-los-añadidos-a-nivel-de-extensión)). | `prompt` `/command args` (se ejecuta incluso durante el streaming), manejadores `input` en `prompt`, `steer` y `follow_up`, `user_bash`, respuestas a diálogos ([tabla de entrada](#canales-del-host-y-de-las-extensiones)). | `extension_ui_request` (`setWidget` `string[]`, `notify`, `setStatus`), mensajes personalizados, mensajes de usuario (`sendUserMessage`), `session_info_changed` (`setSessionName`), `entry_appended` con reproducción mediante `get_entries`, `tool_execution_*` ([tabla de salida](#canales-del-host-y-de-las-extensiones)). | La entrada es texto (más imágenes en los prompts), no campos tipados: la carga de un comando o de `input` comparte el espacio de texto del prompt del usuario, y la respuesta de `prompt` solo transporta una `disposition`, no un resultado (PC`docs/rpc-commands.md:40`); `Inference:` los resultados y los errores necesitan un registro de salida aparte y un id de correlación definido por el esquema. El `content` de un mensaje personalizado va al modelo (PC`docs/message-types.md:217`) y las entradas persisten en el archivo de sesión (PC`src/core/extensions/types.ts:1691-1692`); `Inference:` cada vía de salida intercambia contexto del modelo o tamaño de la sesión frente a `setWidget`, que no conserva ninguno de los dos. `Inference:` aún no existe ninguna regla de evolución del esquema (precedente del esquema de actividad, más arriba). |
 | **C. Un canal propio de gentle-shell fuera del stdio de pi** | gentle-shell (más el escritorio); sin cambios en pi; el mismo proceso de gentle-shell que en B. | Cualquier cosa que defina el nuevo protocolo. | Cualquier cosa que defina el nuevo protocolo. | Un segundo transporte junto a stdio. El transporte existente es específico de cada plataforma (sockets Unix; tuberías con nombre mediante un script auxiliar de PowerShell en Windows), transporta solo notificaciones y ACK, y necesita consentimiento interactivo para enviar (GS`docs/gentle-shell.md:219`). Su control de acceso es la propiedad por el usuario actual del sistema operativo en POSIX (GS`lib/agents-session-transport.ts:22-23`, `:210`, `:440`), y los archivos de presencia que lo acompañan son un "Same-profile OS-user trust boundary, not an authorization channel" (GS`lib/orchestrator-presence.ts:6`). Sus mensajes entrantes llegan al modelo como mensajes de seguimiento que disparan un turno (GS`extensions/gentle-agents.ts:501`), así que hoy no es un canal de control del host. `Inference:` el escritorio necesitaría descubrimiento de endpoints, autenticación y ordenación respecto al flujo de stdio, y la afirmación de que RPC es "la única interfaz formal entre el escritorio y gentle-shell" (línea 7 de esta página) dejaría de cumplirse. |
+
+## Notas para implementadores de clientes pi
+
+Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc-mode.md`), verificados de nuevo contra pi 1.0.0 (`pi@a13d35a`).
+
+### `RpcClient` (TypeScript)
+
+`RpcClient` se distribuye con pi como cliente de referencia y lanza `node <cliPath> --mode rpc` (`pr30:docs/pi-rpc-mode.md:274-276`; `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:94`). Sus límites conocidos (`pr30:docs/pi-rpc-mode.md:294-304`):
+
+- Expone un único canal de oyentes, `onEvent`, sin eventos con nombre (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:172`).
+- Nunca responde a un `extension_ui_request`: el diálogo llega a los oyentes, así que una extensión a la espera de un diálogo se bloquea hasta su propio timeout (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:523-542`).
+- `bash()` no reenvía `excludeFromContext`, aunque el protocolo lo admite (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:353`).
+- `getData()` lanza una excepción si `success` es false (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:608-610`); las líneas de stdout que no son JSON se ignoran, y las respuestas sin id llegan a los oyentes en lugar de a las peticiones pendientes (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:523-542`).
+
+### Advertencias de comandos, eventos y lanzamiento
+
+- El modo RPC rechaza los argumentos de prompt `@file`; los prompts pasan por `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
+- `get_commands` solo enumera comandos de extensión, plantillas de prompt y skills; los comandos TUI integrados como `/settings` ni se enumeran ni son ejecutables mediante `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/src/modes/interactive/interactive-mode.ts:700-716`). Ver [inventory C12](05-capability-inventory.md#conversación-y-entrada).
+- Emulación de Esc sobre RPC: lee el texto pendiente con `clear_queue`, envía `abort` y restaura el texto en el editor del cliente (`pr30:docs/pi-rpc-mode.md:170-171`).
+- La salida de `bash` llega al modelo en el siguiente `prompt`, no de inmediato, salvo que se defina `excludeFromContext` (`pr30:docs/pi-rpc-mode.md:176-178`).
+- RPC no emite ningún registro de cabecera de sesión; lee el id y el archivo de la sesión con `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). Ver [Eventos](#eventos-runtime--escritorio).
+- `message_update.usage` es el último uso acumulado notificado por el proveedor y puede permanecer en cero hasta que se complete la respuesta (`pr30:docs/pi-rpc-mode.md:208-210`). Ver [`message_update` tipos de delta](#tipos-de-delta-de-message_update).
+- La exportación de subruta `@earendil-works/pi-coding-agent/rpc-entry` es solo de importación: ejecuta `main(["--mode", "rpc", ...argv])` y define `process.title = "pi-rpc"`; el único ejecutable es `pi` y no existe un binario `pi-rpc` aparte (`pr30:docs/pi-rpc-mode.md:46-50`).
+
+### Advertencias de la UI de extensiones
+
+[Qué descarta el modo RPC](#qué-descarta-el-modo-rpc) enumera la mayoría de las llamadas `ctx.ui` degradadas; conviene conocer cuatro más (`pr30:docs/pi-rpc-mode.md:250-264`).
+
+- `onTerminalInput()` devuelve una cancelación que no hace nada (`pr30:docs/pi-rpc-mode.md:258`).
+- `getEditorComponent()` devuelve `undefined` (`pr30:docs/pi-rpc-mode.md:260`).
+- `getToolsExpanded()` devuelve `false` (`pr30:docs/pi-rpc-mode.md:261`).
+- `pasteToEditor()` se degrada a `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`).
+
+`ctx.mode` es `"rpc"` mientras `ctx.hasUI` sigue siendo `true`, porque los diálogos y las notificaciones siguen funcionando; protege las funcionalidades exclusivas de la TUI con `ctx.mode === "tui"`, nunca con `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`).
+
+### Lista de comprobación para un cliente nuevo
+
+1. Lee con un lector binario/UTF-8 que solo divida en `LF`; nunca uses `readline`.
+2. Lee stdout continuamente y reserva stderr para el diagnóstico.
+3. Pon un `id` único en cada comando y correlaciona las respuestas por `id`, no por orden.
+4. Suscríbete a los eventos antes del primer prompt.
+5. Espera a `agent_settled`, no a `agent_end`.
+6. Recompón el texto a partir de los deltas de `message_update` y confía en `message_end`.
+7. Responde a cada diálogo que muestres o deja que expire por timeout.
+8. Cierra stdin para apagar con orden y sigue gestionando señales y salidas inesperadas (`pr30:docs/pi-rpc-mode.md:343-352`).
+
+### Cliente mínimo en Python
+
+El cliente mínimo siguiente lanza `["pi", "--mode", "rpc", "--no-session"]`, escribe un comando JSON más un LF, recorre las líneas de stdout dividiendo solo en LF, imprime los deltas `text_delta`, termina con `agent_settled` y cierra stdin.
+```python
+import json, subprocess
+
+process = subprocess.Popen(
+    ["pi", "--mode", "rpc", "--no-session"],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+)
+
+process.stdin.write(json.dumps({"id": "p1", "type": "prompt", "message": "Hello"}).encode() + b"\n")
+process.stdin.flush()
+
+while line := process.stdout.readline():          # binary read: splits on LF only
+    record = json.loads(line)
+    if record.get("type") == "message_update":
+        update = record["assistantMessageEvent"]
+        if update["type"] == "text_delta":
+            print(update["delta"], end="", flush=True)
+    elif record.get("type") == "agent_settled":
+        break
+
+process.stdin.close()
+process.wait()
+```
+El código del cliente es `pr30:docs/pi-rpc-mode.md:306-334`.
 
 ## Cómo proponer cambios del contrato en upstream
 
