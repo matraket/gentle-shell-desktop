@@ -201,7 +201,21 @@ The rules come from `src/README.md:21-43` and the maintainer instructions record
 
 There is no global store. `App` holds the selection, and the pushed `ChatState` is the single source of truth for the thread (`src/renderer/app/App.tsx:19-24`; `src/renderer/features/conversation/ConversationContainer.tsx:39-45`).
 
+### Renderer state ownership
+
+| State | Owner | Notes | Evidence |
+|---|---|---|---|
+| Active-chat selection (`ActiveChat`: new vs existing) | `App` | Local `useState`; `ChatsContainer` only reports selection intent up. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60` |
+| Conversation `ChatState` (messages, working, dialogs, helpers) | `ConversationContainer` | The pushed state is the thread's single source of truth; opens via `openChat`/`newChat`, subscribes via `onState`/`onError`. | `src/renderer/features/conversation/ConversationContainer.tsx:39-49`, `:60-67`, `:81-95` |
+| Conversation pane and `helpersOpenedAt` | `ConversationContainer` | Resets to the chat pane whenever the selected chat changes. | `src/renderer/features/conversation/ConversationContainer.tsx:51-56`, `:76-79` |
+| Helper selection and view flags (`selectedTaskId`, `followLive`, `showToolDetails`) | `HelpersContainer` (props only, no bridge calls) | Receives `ChatState.helpers` as the `activity` prop from `ConversationContainer`. | `src/renderer/features/helpers/HelpersContainer.tsx:30-42` |
+| Persisted home choice (`{home}`) | Main `SetupService` + `AppConfigStore` | The renderer only reads `setupStatus()` and writes via `chooseHome()` (`FirstRunContainer`) and switches screens (`App`); persistence lives in main. | `src/main/adapters/setupService.ts:21-41`; `src/main/adapters/appConfigStore.ts:20-42`; `src/renderer/features/first-run/FirstRunContainer.tsx:23-49`; `src/renderer/app/App.tsx:32-52` |
+
+Renderer isolation here means `contextIsolation: true` with `nodeIntegration: false` and `sandbox: false`: the renderer is isolated from Node through the preload bridge, not placed in the Chromium OS-level sandbox (`src/main/index.ts:83-85`; `src/preload/index.ts:1-4`).
+
 ## Data paths to pi
+
+Two paths reach pi: launcher-mediated chat goes through the spawned `gentle-shell --mode rpc` child (`src/main/domain/session/PiSession.ts:119-141`), and the session list is an in-process `import("@earendil-works/pi-coding-agent")` in the main process (`src/main/adapters/piSessionStore.ts:30`).
 
 | | RPC child (chat) | In-process (chat list) |
 |---|---|---|
@@ -242,6 +256,7 @@ The first-run screen appears only when no choice is saved and a pi agent dir exi
 ### Build and packaging
 
 - **Build.** electron-vite builds three bundles. Main and preload externalize dependencies, so `@earendil-works/pi-coding-agent` stays a real `node_modules` import (`electron.vite.config.ts:5-40`; `electron-builder.yml:11-17`).
+- **Path aliases.** `@shared` resolves in all three bundles (`electron.vite.config.ts:13`, `:21`, `:34-35`); `@renderer` resolves in the renderer bundle and in the test config (`vitest.config.ts:15-16`).
 - **Packaging.** electron-builder, `appId: dev.gentleman.gentle-shell`, `productName: gentle shell`, output `release/`, `asar: true`. Ships `out/**` and `package.json`. Targets: mac `dmg` + `zip` with `identity: null` (unsigned), win `nsis`, linux `AppImage` (`electron-builder.yml:7-38`).
 - **Install scripts.** `pnpm-workspace.yaml` has one `allowBuilds` map: `@google/genai`, `esbuild` and `protobufjs` are `true`, `electron-winstaller` is `false` (`pnpm-workspace.yaml:1-10`). Its comment names only `@google/genai` and `protobufjs`, as transitive dependencies of `@earendil-works/pi-coding-agent` (`pnpm-workspace.yaml:2-6`). `esbuild` and `electron-winstaller` carry no comment. In the lockfile, `esbuild` is reached through pi's `@earendil-works/chord@0.85.1` (`pnpm-lock.yaml:3196-3198`, `:3239`) and also through `vite` and `electron-vite` (`pnpm-lock.yaml:4343`, `:5433`).
 - **Platforms.** Tested on macOS Apple silicon only. Windows and Linux builds are configured but untested. No signing, notarization or auto-update (`README.md:7`, `:64`). Per-platform support of the upstream pieces and what the desktop must solve: [10-platforms.md](../10-platforms.md).
