@@ -203,7 +203,21 @@ Las reglas proceden de `src/README.md:21-43` y de las instrucciones del mantened
 
 No hay un store global. `App` mantiene la selección, y el `ChatState` recibido es la única fuente de verdad del hilo (`src/renderer/app/App.tsx:19-24`; `src/renderer/features/conversation/ConversationContainer.tsx:39-45`).
 
+### Propiedad del estado en el renderer
+
+| Estado | Responsable | Notas | Evidencia |
+|---|---|---|---|
+| Selección del chat activo (`ActiveChat`: nuevo frente a existente) | `App` | `useState` local; `ChatsContainer` solo comunica la intención de selección hacia arriba. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60` |
+| `ChatState` de la conversación (mensajes, trabajo en curso, diálogos, helpers) | `ConversationContainer` | El estado recibido es la única fuente de verdad del hilo; abre con `openChat`/`newChat` y se suscribe con `onState`/`onError`. | `src/renderer/features/conversation/ConversationContainer.tsx:39-49`, `:60-67`, `:81-95` |
+| Panel de la conversación y `helpersOpenedAt` | `ConversationContainer` | Vuelve al panel de chat cada vez que cambia el chat seleccionado. | `src/renderer/features/conversation/ConversationContainer.tsx:51-56`, `:76-79` |
+| Selección de helper y flags de vista (`selectedTaskId`, `followLive`, `showToolDetails`) | `HelpersContainer` (solo props, sin llamadas al puente) | Recibe `ChatState.helpers` como prop `activity` desde `ConversationContainer`. | `src/renderer/features/helpers/HelpersContainer.tsx:30-42` |
+| Elección de home persistida (`{home}`) | `SetupService` principal + `AppConfigStore` | El renderer solo lee `setupStatus()` y escribe con `chooseHome()` (`FirstRunContainer`) y cambia de pantalla (`App`); la persistencia vive en el proceso principal. | `src/main/adapters/setupService.ts:21-41`; `src/main/adapters/appConfigStore.ts:20-42`; `src/renderer/features/first-run/FirstRunContainer.tsx:23-49`; `src/renderer/app/App.tsx:32-52` |
+
+El aislamiento del renderer aquí significa `contextIsolation: true` con `nodeIntegration: false` y `sandbox: false`: el renderer queda aislado de Node a través del puente del preload, no situado en el sandbox del sistema operativo de Chromium (`src/main/index.ts:83-85`; `src/preload/index.ts:1-4`).
+
 ## Caminos de datos hacia pi
+
+Dos caminos llegan a pi: el chat mediado por el lanzador sigue pasando por el hijo lanzado `gentle-shell --mode rpc` (`src/main/domain/session/PiSession.ts:119-141`), y la lista de sesiones es un `import("@earendil-works/pi-coding-agent")` en el mismo proceso principal (`src/main/adapters/piSessionStore.ts:30`).
 
 | | Hijo RPC (chat) | En el mismo proceso (lista de chats) |
 |---|---|---|
@@ -244,6 +258,7 @@ La pantalla de primer arranque solo aparece cuando no hay ninguna elección guar
 ### Build y empaquetado
 
 - **Build.** electron-vite construye tres bundles. El proceso principal y el preload externalizan las dependencias, así que `@earendil-works/pi-coding-agent` sigue siendo un import real de `node_modules` (`electron.vite.config.ts:5-40`; `electron-builder.yml:11-17`).
+- **Alias de rutas.** `@shared` se resuelve en los tres bundles (`electron.vite.config.ts:13`, `:21`, `:34-35`); `@renderer` se resuelve en el bundle del renderer y en la configuración de pruebas (`vitest.config.ts:15-16`).
 - **Empaquetado.** electron-builder, `appId: dev.gentleman.gentle-shell`, `productName: gentle shell`, salida `release/`, `asar: true`. Incluye `out/**` y `package.json`. Destinos: mac `dmg` + `zip` con `identity: null` (sin firmar), win `nsis`, linux `AppImage` (`electron-builder.yml:7-38`).
 - **Scripts de instalación.** `pnpm-workspace.yaml` tiene un único mapa `allowBuilds`: `@google/genai`, `esbuild` y `protobufjs` están a `true`, `electron-winstaller` a `false` (`pnpm-workspace.yaml:1-10`). Su comentario solo nombra `@google/genai` y `protobufjs`, como dependencias transitivas de `@earendil-works/pi-coding-agent` (`pnpm-workspace.yaml:2-6`). `esbuild` y `electron-winstaller` no llevan comentario. En el lockfile, a `esbuild` se llega a través de `@earendil-works/chord@0.85.1` de pi (`pnpm-lock.yaml:3196-3198`, `:3239`) y también a través de `vite` y `electron-vite` (`pnpm-lock.yaml:4343`, `:5433`).
 - **Plataformas.** Probada solo en macOS con Apple silicon. Los builds de Windows y Linux están configurados pero no probados. Sin firma, notarización ni actualización automática (`README.md:7`, `:64`). Soporte por plataforma de las piezas upstream y lo que debe resolver el escritorio: [10-platforms.md](../10-platforms.md).
