@@ -37,6 +37,8 @@ Los números de línea del escritorio están en `D:renderer/shared/theme/tokens.
 
 **Variables del tema que el escritorio no usa** (`D:renderer/shared/theme/gentleman-cute.json:4-31`): `bgElement`, `bgSubtle`, `infoBg`, `toolPendingBg` (todas `#100A0F`), `dim` `#76616B`, `softRose` `#D7A0B8`, `sky` `#C4DAF6`, `selection` `#28121E`, `toolSuccessBg` `#151316`, `toolErrorBg` `#261019`. El tema también asigna 55 `colors` semánticos (markdown, sintaxis, niveles de razonamiento, estados de herramienta, diffs) a estas variables (`:32-88`); el escritorio no tiene una capa semántica equivalente.
 
+PR #30 estimó los valores del tema a partir de capturas (`pr30:docs/frontend-renderer-design.md:11-23`); los exactos están en `desktop@5ab4a00:src/renderer/shared/theme/gentleman-cute.json` y ya están copiados línea por línea en la tabla anterior (`corpus@d119d0a:docs/06-ux/design-system.md:17-32`). Donde se solapan, los valores provisionales y los exactos coinciden; trata esta tabla como canónica.
+
 ### Tokens de fuente y forma
 
 | Token | Escritorio (`tokens.css`) | Maqueta (`gs-mockup.html`) |
