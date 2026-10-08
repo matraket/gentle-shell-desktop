@@ -14,7 +14,7 @@
 | Is there a version handshake? | No. Only the activity payload carries a schema tag (`gentle-agents.activity/v1`). | [Versioning](#versioning-and-compatibility) |
 | Biggest gaps | Helper Stop, structured ODD state, providers/auth, extensions management, profile/RDD state. | [Gaps](#gaps-the-desktop-needs) |
 
-**How to read citations.** Every claim cites `repo@shortsha:path:line`. Pinned SHAs (refreshed 2026-10-03): `gentle-shell-desktop@5ab4a00` (main), `gentle-shell@ac67159` (gentle-shell `main`, package version 4.0.0, 19 commits after the 4.0.0 release commit `1f35ab1`; facts from those commits are marked as post-release), `pi@a13d35a` (pi 1.0.0), `pi@d981de1` (pi 0.85.1, the desktop's in-process copy). `pi@d86654a` (pi 0.99.1) and `gentle-shell@1162ce9` (3.7.0) appear only in explicit version comparisons. Lines labelled `Inference:` are reasoning, not verified behavior. `UNVERIFIED:` marks claims checked but not confirmed. IDs from other pages are qualified (`audit A5`, `inventory Y4`); bare G1–G10 are this page's gaps.
+**How to read citations.** Every claim cites `repo@shortsha:path:line`. Pinned SHAs (refreshed 2026-10-03): `gentle-shell-desktop@5ab4a00` (main), `gentle-shell@ac67159` (gentle-shell `main`, package version 4.0.0, 19 commits after the 4.0.0 release commit `1f35ab1`; facts from those commits are marked as post-release), `pi@a13d35a` (pi 1.0.0), `pi@d981de1` (pi 0.85.1, the desktop's in-process copy). `pi@d86654a` (pi 0.99.1) and `gentle-shell@1162ce9` (3.7.0) appear only in explicit version comparisons. Lines labelled `Inference:` are reasoning, not verified behavior. `UNVERIFIED:` marks claims checked but not confirmed. IDs from other pages are qualified (`audit A5`, `inventory Y4`); bare G1–G10 are this page's gaps. `pr30:` cites [PR #30](https://github.com/Gentleman-Programming/gentle-shell-desktop/pull/30) at its last commit `cd6d72f` (base `5ab4a00`).
 
 ## Transport and framing
 
@@ -359,6 +359,80 @@ Detail for the open question [Host channel to gentle-shell features](03-architec
 | **A. Extend pi's `RpcCommand`** | pi, then gentle-shell to implement and the desktop to consume. pi's core is minimal and extension hook points "should be well considered and discussed" (`pi@a13d35a:CONTRIBUTING.md:7-11`); a new contributor files a `Contribution Proposal` issue, "required for new contributors before submitting a PR" (`pi@a13d35a:.github/ISSUE_TEMPLATE/contribution.yml:1-2`) and needs `lgtm` before a PR (`pi@a13d35a:CONTRIBUTING.md:29-34`, `:58`); larger changes go through RFCs (`:101-102`). | Typed commands with a correlated `response`, either one per feature or a generic extension passthrough; both are new (PC`src/modes/rpc/rpc-types.ts:20-74`; PC`src/modes/rpc/rpc-mode.ts:713-716`). | New typed event types, if pi accepts them. | `Inference:` it needs an upstream pi review before gentle-shell can implement it, and may be declined under pi's minimal-core rule. `Inference:` the desktop would depend on a pi release above today's floor of 0.99.1 (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`) with no version handshake to detect it ([Versioning](#versioning-and-compatibility)). `UNVERIFIED:` no RPC stability or compatibility policy was found for pi; its changelog records additive RPC changes (PC`CHANGELOG.md:129`, pi 0.99.0) and notes when "the supported local SDK and stdio RPC API are unchanged" (`:371`, pi 0.85.1). |
 | **B. Existing pi extension channels, with versioned schemas** | gentle-shell (plus the desktop); no pi change. gentle-shell has no `CONTRIBUTING.md` and takes feature requests through its issue form ([gentle-shell process](#gentle-shell-gentleman-programminggentle-shell-package-gentle-pi-owns-the-extension-level-additions)). | `prompt` `/command args` (runs even while streaming), `input` handlers on `prompt`, `steer` and `follow_up`, `user_bash`, dialog responses ([inbound table](#host-and-extension-channels)). | `extension_ui_request` (`setWidget` `string[]`, `notify`, `setStatus`), custom messages, user messages (`sendUserMessage`), `session_info_changed` (`setSessionName`), `entry_appended` with `get_entries` replay, `tool_execution_*` ([outbound table](#host-and-extension-channels)). | Inbound is text (plus images on prompts), not typed fields: a command or `input` payload shares the user's prompt text space, and the `prompt` response carries only a `disposition`, not a result (PC`docs/rpc-commands.md:40`); `Inference:` results and errors need a separate outbound record and a correlation id defined by the schema. Custom message `content` goes to the model (PC`docs/message-types.md:217`) and entries persist in the session file (PC`src/core/extensions/types.ts:1691-1692`); `Inference:` each outbound route trades model context or session size against `setWidget`, which keeps neither. `Inference:` no schema-evolution rule exists yet (activity schema precedent above). |
 | **C. A gentle-shell channel of its own outside pi's stdio** | gentle-shell (plus the desktop); no pi change; same gentle-shell process as B. | Anything the new protocol defines. | Anything the new protocol defines. | A second transport beside stdio. The existing transport is per platform (Unix sockets; named pipes through a PowerShell helper on Windows), carries notifications and ACKs only, and needs interactive consent to send (GS`docs/gentle-shell.md:219`). Its access control is ownership by the current OS user on POSIX (GS`lib/agents-session-transport.ts:22-23`, `:210`, `:440`), and the presence files beside it are a "Same-profile OS-user trust boundary, not an authorization channel" (GS`lib/orchestrator-presence.ts:6`). Its incoming messages reach the model as follow-ups that trigger a turn (GS`extensions/gentle-agents.ts:501`), so it is not a host control channel today. `Inference:` the desktop would need endpoint discovery, authentication and ordering against the stdio stream, and the statement that RPC is "the only formal interface between the desktop and gentle-shell" (line 5 of this page) would no longer hold. |
+
+## Notes for pi client implementers
+
+The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), re-checked against pi 1.0.0 (`pi@a13d35a`).
+
+### `RpcClient` (TypeScript)
+
+`RpcClient` ships with pi as the reference client and spawns `node <cliPath> --mode rpc` (`pr30:docs/pi-rpc-mode.md:274-276`; `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:94`). Its known limits (`pr30:docs/pi-rpc-mode.md:294-304`):
+
+- It exposes a single listener channel, `onEvent`, with no named events (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:172`).
+- It never answers an `extension_ui_request`: a dialog reaches the listeners, so an extension waiting on a dialog blocks until its own timeout (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:523-542`).
+- `bash()` does not forward `excludeFromContext`, although the protocol supports it (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:353`).
+- `getData()` throws when `success` is false (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:608-610`); non-JSON stdout lines are ignored, and responses without an id reach listeners instead of pending requests (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-client.ts:523-542`).
+
+### Command, event and launch caveats
+
+- RPC mode rejects `@file` prompt arguments; prompts go through `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
+- `get_commands` lists extension commands, prompt templates and skills only; built-in TUI commands such as `/settings` are neither listed nor executable through `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/src/modes/interactive/interactive-mode.ts:700-716`). See [inventory C12](05-capability-inventory.md#conversation-and-input).
+- Esc emulation over RPC: read the pending text from `clear_queue`, send `abort`, then restore the text into the client editor (`pr30:docs/pi-rpc-mode.md:170-171`).
+- `bash` output reaches the model on the next `prompt`, not immediately, unless `excludeFromContext` is set (`pr30:docs/pi-rpc-mode.md:176-178`).
+- RPC emits no session header record; read the session id and file from `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). See [Events](#events-runtime--desktop).
+- `message_update.usage` is the latest cumulative provider-reported usage and may stay zero until the response completes (`pr30:docs/pi-rpc-mode.md:208-210`). See [`message_update` delta types](#message_update-delta-types).
+- The subpath export `@earendil-works/pi-coding-agent/rpc-entry` is import-only: it runs `main(["--mode", "rpc", ...argv])` and sets `process.title = "pi-rpc"`; the only executable is `pi`, and there is no separate `pi-rpc` binary (`pr30:docs/pi-rpc-mode.md:46-50`).
+
+### Extension UI caveats
+
+[What RPC mode drops](#what-rpc-mode-drops) lists most degraded `ctx.ui` calls; four more are worth knowing (`pr30:docs/pi-rpc-mode.md:250-264`).
+
+- `onTerminalInput()` returns a no-op unsubscribe (`pr30:docs/pi-rpc-mode.md:258`).
+- `getEditorComponent()` returns `undefined` (`pr30:docs/pi-rpc-mode.md:260`).
+- `getToolsExpanded()` returns `false` (`pr30:docs/pi-rpc-mode.md:261`).
+- `pasteToEditor()` degrades to `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`).
+
+`ctx.mode` is `"rpc"` while `ctx.hasUI` remains `true`, because dialogs and notifications still work; guard TUI-only features with `ctx.mode === "tui"`, never with `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`).
+
+### Checklist for a new client
+
+1. Read with a binary/UTF-8 reader that splits only on `LF`; never use `readline`.
+2. Read stdout continuously and keep stderr for diagnostics.
+3. Put a unique `id` on every command and correlate responses by `id`, not order.
+4. Subscribe to events before the first prompt.
+5. Wait for `agent_settled`, not `agent_end`.
+6. Reassemble text from `message_update` deltas, then trust `message_end`.
+7. Answer every dialog you display, or let it time out.
+8. Close stdin to shut down, and still handle signals and unexpected exits (`pr30:docs/pi-rpc-mode.md:343-352`).
+
+### Minimal Python client
+
+The minimal client below spawns `["pi", "--mode", "rpc", "--no-session"]`, writes one JSON command plus LF, loops over stdout lines splitting on LF only, prints `text_delta` deltas, breaks on `agent_settled` and closes stdin.
+```python
+import json, subprocess
+
+process = subprocess.Popen(
+    ["pi", "--mode", "rpc", "--no-session"],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+)
+
+process.stdin.write(json.dumps({"id": "p1", "type": "prompt", "message": "Hello"}).encode() + b"\n")
+process.stdin.flush()
+
+while line := process.stdout.readline():          # binary read: splits on LF only
+    record = json.loads(line)
+    if record.get("type") == "message_update":
+        update = record["assistantMessageEvent"]
+        if update["type"] == "text_delta":
+            print(update["delta"], end="", flush=True)
+    elif record.get("type") == "agent_settled":
+        break
+
+process.stdin.close()
+process.wait()
+```
+The client code is `pr30:docs/pi-rpc-mode.md:306-334`.
 
 ## How to propose contract changes upstream
 
