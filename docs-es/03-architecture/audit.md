@@ -275,12 +275,12 @@ Esto precisa la [observación 6 de 04-rpc-contract.md](../04-rpc-contract.md#obs
 ### A14. Endurecimiento del preload y del IPC
 
 **Evidencia**
-- `sandbox: false`: `gentle-shell-desktop@5ab4a00:src/main/index.ts:85`.
+- `sandbox: false` (sandbox del sistema operativo de Chromium desactivado, distinto de `contextIsolation`, que solo separa el renderer del contexto del preload/Node): `gentle-shell-desktop@5ab4a00:src/main/index.ts:85`.
 - Los handlers de IPC usan los argumentos del renderer tal cual, sin comprobaciones de tipo ni comprobación del emisor: `gentle-shell-desktop@5ab4a00:src/main/ipc/registerHandlers.ts:28-37`.
 - La CSP de producción permite `'unsafe-eval'` y carga las fuentes desde Google en tiempo de ejecución: `gentle-shell-desktop@5ab4a00:src/renderer/index.html:5-16`.
 - No existe ninguna protección `will-navigate` (buscar `will-navigate` en `src/` no devuelve nada).
 - Mitigaciones existentes:
-  - `contextIsolation: true` y `nodeIntegration: false`: `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-84`.
+  - `contextIsolation: true` y `nodeIntegration: false` (aislamiento del renderer respecto a Node a través del puente del preload, no el sandbox del sistema operativo de Chromium): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-84`.
   - Se deniegan todas las ventanas nuevas: `:97-102`.
   - El Markdown se sanea con DOMPurify: `gentle-shell-desktop@5ab4a00:src/renderer/shared/markdown/renderMarkdown.ts:58-72`.
 
