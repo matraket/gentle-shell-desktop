@@ -436,6 +436,10 @@ process.wait()
 ```
 El código del cliente es `pr30:docs/pi-rpc-mode.md:306-334`.
 
+### Registros fuera de las uniones de tipos
+
+`extension_error` se emite en stdout pero no está en las uniones de `rpc-types` (`pr30:docs/pi-rpc-mode.md:367-369`). Sí está documentado (`pi@a13d35a:packages/coding-agent/docs/json.md:190-194`) y lleva `extensionPath`, `event` y `error` cuando un manejador de extensión lanza una excepción (`pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:348-350`). Trata los valores de `type` desconocidos como ignorables, no como fatales. Ver [Eventos](#eventos-runtime--escritorio) y [Canales del host y de las extensiones](#canales-del-host-y-de-las-extensiones).
+
 ## Cómo proponer cambios del contrato en upstream
 
 ### pi (`earendil-works/pi`): responsable del protocolo RPC
