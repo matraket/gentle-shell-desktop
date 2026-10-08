@@ -362,7 +362,7 @@ Detail for the open question [Host channel to gentle-shell features](03-architec
 
 ## Notes for pi client implementers
 
-The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), re-checked against pi 1.0.0 (`pi@a13d35a`).
+The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), re-checked against pi 1.0.0 (`pi@a13d35a`). PR #30 was written against pi 0.87.1 (`pr30:docs/pi-rpc-mode.md:15-16`); the gentle-shell launcher refuses to start a pi older than 0.99.1 (`gentle-shell@ac67159:lib/gentle-shell-launcher.ts:392`) and gentle-shell 4.0.0 develops against 1.0.0 (`gentle-shell@ac67159:package.json:95-97`).
 
 ### `RpcClient` (TypeScript)
 
