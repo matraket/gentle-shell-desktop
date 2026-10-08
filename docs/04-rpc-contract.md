@@ -382,6 +382,7 @@ The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), r
 - RPC emits no session header record; read the session id and file from `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). See [Events](#events-runtime--desktop).
 - `message_update.usage` is the latest cumulative provider-reported usage and may stay zero until the response completes (`pr30:docs/pi-rpc-mode.md:208-210`). See [`message_update` delta types](#message_update-delta-types).
 - The subpath export `@earendil-works/pi-coding-agent/rpc-entry` is import-only: it runs `main(["--mode", "rpc", ...argv])` and sets `process.title = "pi-rpc"`; the only executable is `pi`, and there is no separate `pi-rpc` binary (`pr30:docs/pi-rpc-mode.md:46-50`).
+- A successful `prompt` response means the prompt was accepted, queued or handled, never that the run finished (`pr30:docs/pi-rpc-mode.md:99-105`). Since pi 0.99.x it also carries `data.disposition` (`"started"`, `"queued"`, `"handled"`); the PR #30 example predates it (see [Differences between pi 0.85.1 and 0.99.1 (commands)](#differences-between-pi-0851-and-0991-commands)).
 
 ### Extension UI caveats
 
