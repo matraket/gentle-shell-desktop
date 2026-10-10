@@ -27,9 +27,10 @@ Resolve matraket/gentle-shell-desktop#19's documentation placement question by r
 ## PR #24 owner-review response (5476450841)
 
 - [x] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **Done** — commit `3a31957`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
-- [ ] R6 Apply the remaining optional notes (alias citations, local chats/error ownership, Spanish terminology, and qualified issue references), verify mirror/citation/diff hygiene, and record work-unit commit evidence. **In progress.**
+- [x] R6 Apply the remaining optional notes (alias citations, local chats/error ownership, Spanish terminology, and qualified issue references), verify mirror/citation/diff hygiene, and record work-unit commit evidence. **Done** — commit `6f3c03d`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
 - PR description note remains outside this local worktree implementation; do not edit the hosted PR body or post a reply without separate authorization.
 - R5 complete: commit `3a31957` updates both current-architecture editions and both A14 editions with dated Electron sources, precise isolation/sandbox semantics, and the `ChatsContainer` citation; the task record now reflects commits `aacf0ab`, `cca22b7`, and PR #24. Independent verification passed: mirror 37/0 and `git diff --check` clean.
+- R6 complete: commit `6f3c03d` adds precise alias citations, the `ChatsContainer` local `chats`/`error` state row, the Spanish main-process wording, and fully qualified issue references. Independent full-round verification passed: mirror 37/0 and `git diff --check` clean; no functional tests apply to this documentation-only round.
 
 ## Acceptance criteria
 
