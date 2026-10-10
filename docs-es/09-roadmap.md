@@ -223,9 +223,9 @@ Los hexágonos son decisiones del mantenedor; las cajas inclinadas son carencias
 
 El orden de [De un vistazo](#de-un-vistazo) es una **[community proposal]**; estos principios explican cómo leerlo, no un orden nuevo. Adaptado de la estrategia de secuenciación de PR #30 (`pr30:docs/roadmap-memotux.md:20-35`), reasignado a las condiciones de esta página; la forma de los hitos no cambia.
 
-1. **Las condiciones antes que los consumidores.** Un hito empieza cuando se despejan sus aristas DEP: vision Q3 → F1 → M3, con gap G2 como segunda condición de M3 (DEP-02, DEP-05, DEP-06).
-2. **Las condiciones parciales desbloquean trabajo parcial.** Una arista "partial" condiciona solo los criterios indicados: las notificaciones de `notify` (criterio de salida 3 de M6) no necesitan ni F1 ni trabajo upstream (DEP-03, DEP-04).
-3. **La evidencia antes que las reescrituras.** La CI ([QW-04](#qw-04-flujo-de-trabajo-de-ci-audit-a16)) protege la reescritura del host de sesión de F1 (DEP-01); los criterios de salida exigen fixtures reales donde audit A16 los pide (criterio de salida 2 de M3).
+1. **Las condiciones antes que los consumidores.** Un hito empieza cuando se despejan sus aristas DEP sólidas (citadas): vision Q3 → F1 → M3, con gap G2 como segunda condición de M3 (DEP-02, DEP-05, DEP-06).
+2. **Las condiciones parciales desbloquean trabajo parcial.** Una arista "partial" condiciona solo los criterios indicados: `Inference:` las notificaciones de `notify` (criterio de salida 3 de M6) no necesitan ni F1 ni trabajo upstream (DEP-03, DEP-04).
+3. **La evidencia antes que las reescrituras.** `Inference:` la CI ([QW-04](#qw-04-flujo-de-trabajo-de-ci-audit-a16)) protege la reescritura del host de sesión de F1 (DEP-01); los criterios de salida exigen fixtures reales donde audit A16 los pide (criterio de salida 2 de M3).
 4. **Ninguna pantalla antes que su contrato.** El panel de M3 espera al formato de gap G2 (DEP-06); las pantallas de M4 esperan a gap G3–G5 (DEP-09) y a vision Q4 (DEP-08).
 5. **La secuenciación de la identidad está sin resolver.** PR #30 migra a un cursor duradero antes que su registro multisesión (`pr30:docs/roadmap-memotux.md:29-31`); esta página mantiene los ID de mensaje estables dentro de F1 (criterio de salida 4) y no adopta esa división. Ver la nota del registro de deuda.
 
@@ -251,9 +251,9 @@ Las invariantes son restricciones propuestas **[community proposal]**; solo el m
 
 Nota de alcance: este issue conserva la forma actual de los hitos porque la decisión #10 (forma de la hoja de ruta) sigue sin resolverse — no es una invariante permanente. Renombrar o reordenar los hitos corresponde a la decisión #10.
 
-1. **Las condiciones totales antes que los consumidores; las parciales solo condicionan los criterios indicados.** vision Q3 → F1 → M3 (DEP-02, DEP-05); el criterio 3 de M6 sigue libre de F1 (DEP-03).
+1. **Las condiciones totales antes que los consumidores; las parciales solo condicionan los criterios indicados.** vision Q3 → F1 → M3 (DEP-02, DEP-05); `Inference:` el criterio 3 de M6 sigue libre de F1 (DEP-03).
 2. **Ninguna pantalla se publica sobre un contrato sin confirmar.** El contenido de M3 espera a gap G2 (DEP-06); M4 espera a gap G3–G5 y a vision Q4 (DEP-08, DEP-09).
-3. **Los límites de los datos del usuario se mantienen.** El `settings.json` de pi del usuario nunca se edita (vision P3; criterio de salida 5 de M4); las credenciales nunca cruzan el límite del renderer (`Inference:` del diseño de M4).
+3. **Los límites de los datos del usuario se mantienen.** El `settings.json` de pi del usuario nunca se edita (vision P3; criterio de salida 5 de M4); las credenciales nunca cruzan el límite del renderer (propuesta de PR #30: resultado de Providers y techo del renderer, `pr30:docs/roadmap-memotux.md:145-146`, `:258-260`).
 
 **Protocolo de cambios.** La resecuenciación es una decisión del mantenedor registrada con su motivo, nunca una edición silenciosa:
 
