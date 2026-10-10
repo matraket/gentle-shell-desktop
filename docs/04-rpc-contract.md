@@ -397,14 +397,15 @@ The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), r
 
 ### Checklist for a new client
 
-1. Read with a binary/UTF-8 reader that splits only on `LF`; never use `readline`.
+Checklist adapted from `pr30:docs/pi-rpc-mode.md:343-352`.
+1. Read with a binary/UTF-8 reader that splits only on `LF`; never use a generic line reader such as Node's `readline` (`pi@a13d35a:packages/coding-agent/docs/rpc.md:52-54`).
 2. Read stdout continuously and keep stderr for diagnostics.
 3. Put a unique `id` on every command and correlate responses by `id`, not order.
 4. Subscribe to events before the first prompt.
 5. Wait for `agent_settled`, not `agent_end`, unless the `prompt` response's `data.disposition` is `"handled"`.
 6. Reassemble text from `message_update` deltas, then trust `message_end`.
 7. Answer every dialog you display, or let it time out.
-8. Close stdin to shut down, and still handle signals and unexpected exits (`pr30:docs/pi-rpc-mode.md:343-352`).
+8. Close stdin to shut down, and still handle signals and unexpected exits.
 
 ### Minimal Python client
 
