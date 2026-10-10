@@ -399,14 +399,15 @@ Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc
 
 ### Lista de comprobación para un cliente nuevo
 
-1. Lee con un lector binario/UTF-8 que solo divida en `LF`; nunca uses `readline`.
+Lista adaptada de `pr30:docs/pi-rpc-mode.md:343-352`.
+1. Lee con un lector binario/UTF-8 que solo divida en `LF`; nunca uses un lector de líneas genérico como `readline` de Node (`pi@a13d35a:packages/coding-agent/docs/rpc.md:52-54`).
 2. Lee stdout continuamente y reserva stderr para el diagnóstico.
 3. Pon un `id` único en cada comando y correlaciona las respuestas por `id`, no por orden.
 4. Suscríbete a los eventos antes del primer prompt.
 5. Espera a `agent_settled`, no a `agent_end`, salvo que la respuesta de `prompt` traiga `data.disposition` `"handled"`.
 6. Recompón el texto a partir de los deltas de `message_update` y confía en `message_end`.
 7. Responde a cada diálogo que muestres o deja que expire por timeout.
-8. Cierra stdin para apagar con orden y sigue gestionando señales y salidas inesperadas (`pr30:docs/pi-rpc-mode.md:343-352`).
+8. Cierra stdin para apagar con orden y sigue gestionando señales y salidas inesperadas.
 
 ### Cliente mínimo en Python
 
