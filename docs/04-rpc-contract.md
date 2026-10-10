@@ -377,23 +377,23 @@ The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), r
 
 - RPC mode rejects `@file` prompt arguments; prompts go through `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
 - `get_commands` lists extension commands, prompt templates and skills only; built-in TUI commands such as `/settings` are neither listed nor executable through `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:834`, `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:680-710`). See [inventory C12](05-capability-inventory.md#conversation-and-input).
-- Esc emulation over RPC: read the pending text from `clear_queue`, send `abort`, then restore the text into the client editor (`pr30:docs/pi-rpc-mode.md:170-171`).
-- `bash` output reaches the model on the next `prompt`, not immediately, unless `excludeFromContext` is set (`pr30:docs/pi-rpc-mode.md:176-178`).
-- RPC emits no session header record; read the session id and file from `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). See [Events](#events-runtime--desktop).
-- `message_update.usage` is the latest cumulative provider-reported usage and may stay zero until the response completes (`pr30:docs/pi-rpc-mode.md:208-210`). See [`message_update` delta types](#message_update-delta-types).
-- The subpath export `@earendil-works/pi-coding-agent/rpc-entry` is import-only: it runs `main(["--mode", "rpc", ...argv])` and sets `process.title = "pi-rpc"`; the only executable is `pi`, and there is no separate `pi-rpc` binary (`pr30:docs/pi-rpc-mode.md:46-50`).
-- A successful `prompt` response means the prompt was accepted, queued or handled, never that the run finished (`pr30:docs/pi-rpc-mode.md:99-105`). Since pi 0.99.x it also carries `data.disposition` (`"started"`, `"queued"`, `"handled"`); the PR #30 example predates it (see [Differences between pi 0.85.1 and 0.99.1 (commands)](#differences-between-pi-0851-and-0991-commands)). If `data.disposition` is `"handled"`, no run started, so do not wait for `agent_settled` (see [`"handled"` semantics](#differences-between-pi-0851-and-0991-commands)).
+- Esc emulation over RPC: read the pending text from `clear_queue`, send `abort`, then restore the text into the client editor (`pr30:docs/pi-rpc-mode.md:170-171`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:128`).
+- `bash` output reaches the model on the next `prompt`, not immediately, unless `excludeFromContext` is set (`pr30:docs/pi-rpc-mode.md:176-178`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:497`, `:508`).
+- RPC emits no session header record; read the session id and file from `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`; `pi@a13d35a:packages/coding-agent/docs/json.md:9`, `:29`). See [Events](#events-runtime--desktop).
+- `message_update.usage` is the latest cumulative provider-reported usage and may stay zero until the response completes (`pr30:docs/pi-rpc-mode.md:208-210`; `pi@a13d35a:packages/coding-agent/docs/json.md:95`). See [`message_update` delta types](#message_update-delta-types).
+- The subpath export `@earendil-works/pi-coding-agent/rpc-entry` is import-only: it runs `main(["--mode", "rpc", ...argv])` and sets `process.title = "pi-rpc"`; the only executable is `pi`, and there is no separate `pi-rpc` binary (`pr30:docs/pi-rpc-mode.md:46-50`; `pi@a13d35a:packages/coding-agent/package.json:19-20`, `pi@a13d35a:packages/coding-agent/src/rpc-entry.ts:6`, `:13`).
+- A successful `prompt` response means the prompt was accepted, queued or handled, never that the run finished (`pr30:docs/pi-rpc-mode.md:99-105`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:60`). Since pi 0.99.x it also carries `data.disposition` (`"started"`, `"queued"`, `"handled"`); the PR #30 example predates it (see [Differences between pi 0.85.1 and 0.99.1 (commands)](#differences-between-pi-0851-and-0991-commands)). If `data.disposition` is `"handled"`, no run started, so do not wait for `agent_settled` (see [`"handled"` semantics](#differences-between-pi-0851-and-0991-commands)).
 
 ### Extension UI caveats
 
 [What RPC mode drops](#what-rpc-mode-drops) lists most degraded `ctx.ui` calls; four more are worth knowing (`pr30:docs/pi-rpc-mode.md:250-264`).
 
-- `onTerminalInput()` returns a no-op unsubscribe (`pr30:docs/pi-rpc-mode.md:258`).
-- `getEditorComponent()` returns `undefined` (`pr30:docs/pi-rpc-mode.md:260`).
-- `getToolsExpanded()` returns `false` (`pr30:docs/pi-rpc-mode.md:261`).
-- `pasteToEditor()` degrades to `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`).
+- `onTerminalInput()` returns a no-op unsubscribe (`pr30:docs/pi-rpc-mode.md:258`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:17`).
+- `getEditorComponent()` returns `undefined` (`pr30:docs/pi-rpc-mode.md:260`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
+- `getToolsExpanded()` returns `false` (`pr30:docs/pi-rpc-mode.md:261`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
+- `pasteToEditor()` degrades to `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
 
-`ctx.mode` is `"rpc"` while `ctx.hasUI` remains `true`, because dialogs and notifications still work; guard TUI-only features with `ctx.mode === "tui"`, never with `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`).
+`ctx.mode` is `"rpc"` while `ctx.hasUI` remains `true`, because dialogs and notifications still work; guard TUI-only features with `ctx.mode === "tui"`, never with `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:25`).
 
 ### Checklist for a new client
 

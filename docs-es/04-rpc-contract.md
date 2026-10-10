@@ -379,23 +379,23 @@ Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc
 
 - El modo RPC rechaza los argumentos de prompt `@file`; los prompts pasan por `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
 - `get_commands` solo enumera comandos de extensión, plantillas de prompt y skills; los comandos TUI integrados como `/settings` ni se enumeran ni son ejecutables mediante `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:834`, `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:680-710`). Ver [inventory C12](05-capability-inventory.md#conversación-y-entrada).
-- Emulación de Esc sobre RPC: lee el texto pendiente con `clear_queue`, envía `abort` y restaura el texto en el editor del cliente (`pr30:docs/pi-rpc-mode.md:170-171`).
-- La salida de `bash` llega al modelo en el siguiente `prompt`, no de inmediato, salvo que se defina `excludeFromContext` (`pr30:docs/pi-rpc-mode.md:176-178`).
-- RPC no emite ningún registro de cabecera de sesión; lee el id y el archivo de la sesión con `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). Ver [Eventos](#eventos-runtime--escritorio).
-- `message_update.usage` es el último uso acumulado notificado por el proveedor y puede permanecer en cero hasta que se complete la respuesta (`pr30:docs/pi-rpc-mode.md:208-210`). Ver [`message_update` tipos de delta](#tipos-de-delta-de-message_update).
-- La exportación de subruta `@earendil-works/pi-coding-agent/rpc-entry` es solo de importación: ejecuta `main(["--mode", "rpc", ...argv])` y define `process.title = "pi-rpc"`; el único ejecutable es `pi` y no existe un binario `pi-rpc` aparte (`pr30:docs/pi-rpc-mode.md:46-50`).
-- Una respuesta correcta de `prompt` significa que el prompt se aceptó, se encoló o se gestionó, nunca que la ejecución haya terminado (`pr30:docs/pi-rpc-mode.md:99-105`). Desde pi 0.99.x también incluye `data.disposition` (`"started"`, `"queued"`, `"handled"`); el ejemplo de la PR #30 es anterior (ver [Diferencias entre pi 0.85.1 y 0.99.1 (comandos)](#diferencias-entre-pi-0851-y-0991-comandos)). Si `data.disposition` es `"handled"`, no se inició ninguna ejecución, así que no esperes a `agent_settled` (ver [semántica de `"handled"`](#diferencias-entre-pi-0851-y-0991-comandos)).
+- Emulación de Esc sobre RPC: lee el texto pendiente con `clear_queue`, envía `abort` y restaura el texto en el editor del cliente (`pr30:docs/pi-rpc-mode.md:170-171`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:128`).
+- La salida de `bash` llega al modelo en el siguiente `prompt`, no de inmediato, salvo que se defina `excludeFromContext` (`pr30:docs/pi-rpc-mode.md:176-178`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:497`, `:508`).
+- RPC no emite ningún registro de cabecera de sesión; lee el id y el archivo de la sesión con `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`; `pi@a13d35a:packages/coding-agent/docs/json.md:9`, `:29`). Ver [Eventos](#eventos-runtime--escritorio).
+- `message_update.usage` es el último uso acumulado notificado por el proveedor y puede permanecer en cero hasta que se complete la respuesta (`pr30:docs/pi-rpc-mode.md:208-210`; `pi@a13d35a:packages/coding-agent/docs/json.md:95`). Ver [`message_update` tipos de delta](#tipos-de-delta-de-message_update).
+- La exportación de subruta `@earendil-works/pi-coding-agent/rpc-entry` es solo de importación: ejecuta `main(["--mode", "rpc", ...argv])` y define `process.title = "pi-rpc"`; el único ejecutable es `pi` y no existe un binario `pi-rpc` aparte (`pr30:docs/pi-rpc-mode.md:46-50`; `pi@a13d35a:packages/coding-agent/package.json:19-20`, `pi@a13d35a:packages/coding-agent/src/rpc-entry.ts:6`, `:13`).
+- Una respuesta correcta de `prompt` significa que el prompt se aceptó, se encoló o se gestionó, nunca que la ejecución haya terminado (`pr30:docs/pi-rpc-mode.md:99-105`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:60`). Desde pi 0.99.x también incluye `data.disposition` (`"started"`, `"queued"`, `"handled"`); el ejemplo de la PR #30 es anterior (ver [Diferencias entre pi 0.85.1 y 0.99.1 (comandos)](#diferencias-entre-pi-0851-y-0991-comandos)). Si `data.disposition` es `"handled"`, no se inició ninguna ejecución, así que no esperes a `agent_settled` (ver [semántica de `"handled"`](#diferencias-entre-pi-0851-y-0991-comandos)).
 
 ### Advertencias de la UI de extensiones
 
 [Qué descarta el modo RPC](#qué-descarta-el-modo-rpc) enumera la mayoría de las llamadas `ctx.ui` degradadas; conviene conocer cuatro más (`pr30:docs/pi-rpc-mode.md:250-264`).
 
-- `onTerminalInput()` devuelve una cancelación que no hace nada (`pr30:docs/pi-rpc-mode.md:258`).
-- `getEditorComponent()` devuelve `undefined` (`pr30:docs/pi-rpc-mode.md:260`).
-- `getToolsExpanded()` devuelve `false` (`pr30:docs/pi-rpc-mode.md:261`).
-- `pasteToEditor()` se degrada a `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`).
+- `onTerminalInput()` devuelve una cancelación que no hace nada (`pr30:docs/pi-rpc-mode.md:258`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:17`).
+- `getEditorComponent()` devuelve `undefined` (`pr30:docs/pi-rpc-mode.md:260`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
+- `getToolsExpanded()` devuelve `false` (`pr30:docs/pi-rpc-mode.md:261`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
+- `pasteToEditor()` se degrada a `setEditorText()` (`pr30:docs/pi-rpc-mode.md:262`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:19-21`).
 
-`ctx.mode` es `"rpc"` mientras `ctx.hasUI` sigue siendo `true`, porque los diálogos y las notificaciones siguen funcionando; protege las funcionalidades exclusivas de la TUI con `ctx.mode === "tui"`, nunca con `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`).
+`ctx.mode` es `"rpc"` mientras `ctx.hasUI` sigue siendo `true`, porque los diálogos y las notificaciones siguen funcionando; protege las funcionalidades exclusivas de la TUI con `ctx.mode === "tui"`, nunca con `hasUI` (`pr30:docs/pi-rpc-mode.md:266-268`; `pi@a13d35a:packages/coding-agent/docs/rpc-extension-ui.md:25`).
 
 ### Lista de comprobación para un cliente nuevo
 
