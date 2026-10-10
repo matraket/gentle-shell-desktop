@@ -1,10 +1,10 @@
-# Issue #19: architecture and Electron guide placement
+# Issue matraket/gentle-shell-desktop#19: architecture and Electron guide placement
 
 Feature document (ODD). Repository: `matraket/gentle-shell-desktop`. Branch: `consolidation/architecture-guides`, created from `docs/integration` at `b6c0eeb`. Issue: https://github.com/matraket/gentle-shell-desktop/issues/19.
 
 ## Objective
 
-Resolve issue #19's documentation placement question by recording current architecture state in the existing architecture page and folding only source-verified Electron security risks into audit A14. Do not add a standalone generic Electron guide or present its unverified claims as repository facts.
+Resolve matraket/gentle-shell-desktop#19's documentation placement question by recording current architecture state in the existing architecture page and folding only source-verified Electron security risks into audit A14. Do not add a standalone generic Electron guide or present its unverified claims as repository facts.
 
 ## Decision and constraints
 
@@ -14,7 +14,7 @@ Resolve issue #19's documentation placement question by recording current archit
 - Correct factual inaccuracies identified by the issue where they occur in the corpus, including renderer isolation vs Chromium sandbox and pi imports in the main process.
 - Update every changed English corpus document's Spanish mirror in the same work unit.
 - Preserve the project's line-citation, provenance, English/Spanish structural mirror, and fork-only delivery rules.
-- Follow issue #19's topic-branch convention from `docs/integration`; do not push, open another PR, post review replies, or merge without explicit user authorization.
+- Follow matraket/gentle-shell-desktop#19's topic-branch convention from `docs/integration`; do not push, open another PR, post review replies, or merge without explicit user authorization.
 - The user approved implementing review 5476450841 on 2026-10-10. Local work-unit commits are authorized for this round; GitHub PR-body edits and delivery remain separate actions.
 
 ## Tasks
@@ -26,10 +26,10 @@ Resolve issue #19's documentation placement question by recording current archit
 
 ## PR #24 owner-review response (5476450841)
 
-- [ ] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **In progress.**
-- [ ] R6 Apply the approved optional bilingual polish, qualify fork issue references, verify mirror/citation/diff hygiene, and record work-unit commit evidence. **Pending.**
+- [x] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **Done** — commit `3a31957`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
+- [ ] R6 Apply the remaining optional notes (alias citations, local chats/error ownership, Spanish terminology, and qualified issue references), verify mirror/citation/diff hygiene, and record work-unit commit evidence. **In progress.**
 - PR description note remains outside this local worktree implementation; do not edit the hosted PR body or post a reply without separate authorization.
-- R5's required corpus edits are implemented and independently verified (37 mirror pairs / 0 problems; `git diff --check` clean). Correcting the final delivery record and creating the local work-unit commit remain in progress.
+- R5 complete: commit `3a31957` updates both current-architecture editions and both A14 editions with dated Electron sources, precise isolation/sandbox semantics, and the `ChatsContainer` citation; the task record now reflects commits `aacf0ab`, `cca22b7`, and PR #24. Independent verification passed: mirror 37/0 and `git diff --check` clean.
 
 ## Acceptance criteria
 
@@ -41,8 +41,8 @@ Resolve issue #19's documentation placement question by recording current archit
 
 ## Progress and evidence
 
-- Exploration: issue #19 and parent issue #1 read; source and corpus surfaces mapped. Source confirms `contextIsolation: true` and `sandbox: false` in `src/main/index.ts`; `src/main/adapters/piSessionStore.ts` imports pi in process. Current docs already have architecture, A14, and ADR homes; source for the proposed generic guide is not verified.
-- Issue #19's referenced PR #30 documents a state-ownership table, but also inaccurately calls the preload sandboxed and claims the app avoids pi's module graph; those claims were not carried over.
+- Exploration: matraket/gentle-shell-desktop#19 and its parent matraket/gentle-shell-desktop#1 read; source and corpus surfaces mapped. Source confirms `contextIsolation: true` and `sandbox: false` in `src/main/index.ts`; `src/main/adapters/piSessionStore.ts` imports pi in process. Current docs already have architecture, A14, and ADR homes; source for the proposed generic guide is not verified.
+- matraket/gentle-shell-desktop#19's referenced PR #30 documents a state-ownership table, but also inaccurately calls the preload sandboxed and claims the app avoids pi's module graph; those claims were not carried over.
 - R1 complete: a delegated writer updated the six bilingual architecture corpus files, added the source-backed table, clarified A14, and corrected ADR wording.
 - R2 complete: independent verifier confirmed table ownership and source citations, A14's sandbox distinction, and ADR wording; both mirror checks passed (37 pairs, 0 problems).
 - R3 complete: created `consolidation/architecture-guides` from `docs/integration` at `b6c0eeb`; ancestry check passed and the working changes were preserved.
