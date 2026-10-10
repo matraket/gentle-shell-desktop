@@ -275,12 +275,12 @@ Esto precisa la [observación 6 de 04-rpc-contract.md](../04-rpc-contract.md#obs
 ### A14. Endurecimiento del preload y del IPC
 
 **Evidencia**
-- `sandbox: false` (sandbox del sistema operativo de Chromium desactivado, distinto de `contextIsolation`, que solo separa el renderer del contexto del preload/Node): `gentle-shell-desktop@5ab4a00:src/main/index.ts:85`.
+- `sandbox: false` desactiva el sandbox de nivel de sistema operativo del renderer de Chromium, de modo que el preload no va en sandbox; el sandboxing es un ajuste propio, separado de contextIsolation y de la integración de Node (Electron [Process Sandboxing](https://www.electronjs.org/docs/latest/tutorial/sandbox), consultado el 2026-10-10): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-85`.
 - Los handlers de IPC usan los argumentos del renderer tal cual, sin comprobaciones de tipo ni comprobación del emisor: `gentle-shell-desktop@5ab4a00:src/main/ipc/registerHandlers.ts:28-37`.
 - La CSP de producción permite `'unsafe-eval'` y carga las fuentes desde Google en tiempo de ejecución: `gentle-shell-desktop@5ab4a00:src/renderer/index.html:5-16`.
 - No existe ninguna protección `will-navigate` (buscar `will-navigate` en `src/` no devuelve nada).
 - Mitigaciones existentes:
-  - `contextIsolation: true` y `nodeIntegration: false` (aislamiento del renderer respecto a Node a través del puente del preload, no el sandbox del sistema operativo de Chromium): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-84`.
+  - `contextIsolation: true` separa el contexto del preload del contexto de la página, y `nodeIntegration: false` desactiva la integración de Node para los scripts de la página, de modo que la aplicación solo es accesible a través de las APIs que el preload expone deliberadamente (`gentle-shell-desktop@5ab4a00:src/preload/index.ts:1-4`; Electron [Context Isolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation), consultado el 2026-10-10): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-85`.
   - Se deniegan todas las ventanas nuevas: `:97-102`.
   - El Markdown se sanea con DOMPurify: `gentle-shell-desktop@5ab4a00:src/renderer/shared/markdown/renderMarkdown.ts:58-72`.
 

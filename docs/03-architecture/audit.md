@@ -273,12 +273,12 @@ This refines [04-rpc-contract.md observation 6](../04-rpc-contract.md#compatibil
 ### A14. Preload and IPC hardening
 
 **Evidence**
-- `sandbox: false` (Chromium OS-level sandbox disabled, distinct from `contextIsolation`, which only separates the renderer from the preload/Node context): `gentle-shell-desktop@5ab4a00:src/main/index.ts:85`.
+- `sandbox: false` disables Chromium's OS-level renderer sandbox, so the preload is not sandboxed; sandboxing is a setting of its own, separate from context isolation and Node integration (Electron [Process Sandboxing](https://www.electronjs.org/docs/latest/tutorial/sandbox), read 2026-10-10): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-85`.
 - IPC handlers use the renderer's arguments as-is, with no type checks and no sender check: `gentle-shell-desktop@5ab4a00:src/main/ipc/registerHandlers.ts:28-37`.
 - The production CSP allows `'unsafe-eval'` and loads fonts from Google at runtime: `gentle-shell-desktop@5ab4a00:src/renderer/index.html:5-16`.
 - No `will-navigate` guard exists (search for `will-navigate` in `src/` returns nothing).
 - Mitigations in place:
-  - `contextIsolation: true` and `nodeIntegration: false` (renderer isolation from Node through the preload bridge, not the Chromium OS-level sandbox): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-84`.
+  - `contextIsolation: true` separates the preload's context from the page's context, and `nodeIntegration: false` disables Node integration for page scripts, so the app is reachable only through the APIs the preload deliberately exposes (`gentle-shell-desktop@5ab4a00:src/preload/index.ts:1-4`; Electron [Context Isolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation), read 2026-10-10): `gentle-shell-desktop@5ab4a00:src/main/index.ts:83-85`.
   - All new windows are denied: `:97-102`.
   - Markdown is sanitized with DOMPurify: `gentle-shell-desktop@5ab4a00:src/renderer/shared/markdown/renderMarkdown.ts:58-72`.
 

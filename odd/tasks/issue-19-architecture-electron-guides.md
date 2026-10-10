@@ -14,7 +14,8 @@ Resolve issue #19's documentation placement question by recording current archit
 - Correct factual inaccuracies identified by the issue where they occur in the corpus, including renderer isolation vs Chromium sandbox and pi imports in the main process.
 - Update every changed English corpus document's Spanish mirror in the same work unit.
 - Preserve the project's line-citation, provenance, English/Spanish structural mirror, and fork-only delivery rules.
-- Follow issue #19's topic-branch convention from `docs/integration`; do not commit, push, open a PR, or deliver upstream without explicit user authorization.
+- Follow issue #19's topic-branch convention from `docs/integration`; do not push, open another PR, post review replies, or merge without explicit user authorization.
+- The user approved implementing review 5476450841 on 2026-10-10. Local work-unit commits are authorized for this round; GitHub PR-body edits and delivery remain separate actions.
 
 ## Tasks
 
@@ -22,6 +23,13 @@ Resolve issue #19's documentation placement question by recording current archit
 - [x] R2 Independently verify source claims, cross-references, and Spanish mirror structure.
 - [x] R3 Move the issue changes onto a dedicated topic branch based on `docs/integration`.
 - [x] R4 Add the path-alias notes and relocate the pi-import correction to the data-paths section.
+
+## PR #24 owner-review response (5476450841)
+
+- [ ] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **In progress.**
+- [ ] R6 Apply the approved optional bilingual polish, qualify fork issue references, verify mirror/citation/diff hygiene, and record work-unit commit evidence. **Pending.**
+- PR description note remains outside this local worktree implementation; do not edit the hosted PR body or post a reply without separate authorization.
+- R5's required corpus edits are implemented and independently verified (37 mirror pairs / 0 problems; `git diff --check` clean). Correcting the final delivery record and creating the local work-unit commit remain in progress.
 
 ## Acceptance criteria
 
@@ -40,5 +48,5 @@ Resolve issue #19's documentation placement question by recording current archit
 - R3 complete: created `consolidation/architecture-guides` from `docs/integration` at `b6c0eeb`; ancestry check passed and the working changes were preserved.
 - R4 complete: added a single-line **Path aliases** bullet after **Build.** in both languages (`electron.vite.config.ts:13`, `:21`, `:34-35`; `vitest.config.ts:15-16`), and moved the pi-import sentence out of the state-ownership paragraph into a new intro paragraph under *Data paths to pi*, where a reader asking about pi's module graph now finds it. Independent verifier confirmed the placement, cited lines exactly, Spanish N+2 alignment, and both mirror checks (37 pairs, 0 problems). No file cites `current.md` by line number, so the +15-line shift invalidates nothing.
 - Guide disposition: recorded in the PR body only, per the human decision. No corpus note was added; the delivered corpus keeps describing the product, not editorial history.
-- Change size: 6 modified files, +36/-6, plus this untracked task document. No source code changed.
-- Working changes remain uncommitted; no commit, push, PR, or upstream delivery was authorized or performed.
+- Original change size: six corpus files, +36/-6; no source code changed. The original corpus and task-record commits are `aacf0ab` and `cca22b7`.
+- Original implementation is in [matraket/gentle-shell-desktop#24](https://github.com/matraket/gentle-shell-desktop/pull/24). This review-response work remains local; no push, PR-body edit, or review reply has been made.
