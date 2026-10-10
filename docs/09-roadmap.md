@@ -221,9 +221,9 @@ Hexagons are maintainer decisions, slanted boxes are upstream gaps (owners per 0
 
 The order in [At a glance](#at-a-glance) is a **[community proposal]**; these principles explain how to read it, not a new order. Adapted from PR #30's sequencing strategy (`pr30:docs/roadmap-memotux.md:20-35`), remapped to this page's gates; the milestone shape is unchanged.
 
-1. **Gates before consumers.** A milestone starts when its DEP edges clear: vision Q3 → F1 → M3, with gap G2 as M3's second gate (DEP-02, DEP-05, DEP-06).
-2. **Partial gates unblock partial work.** A "partial" edge gates only the listed criteria: `notify` toasts (M6 exit criterion 3) need neither F1 nor upstream work (DEP-03, DEP-04).
-3. **Evidence before rewrites.** CI ([QW-04](#qw-04-ci-workflow-audit-a16)) protects the F1 session-host rewrite (DEP-01); exit criteria demand real fixtures where audit A16 asks for them (M3 exit criterion 2).
+1. **Gates before consumers.** A milestone starts when its solid (cited) DEP edges clear: vision Q3 → F1 → M3, with gap G2 as M3's second gate (DEP-02, DEP-05, DEP-06).
+2. **Partial gates unblock partial work.** A "partial" edge gates only the listed criteria: `Inference:` `notify` toasts (M6 exit criterion 3) need neither F1 nor upstream work (DEP-03, DEP-04).
+3. **Evidence before rewrites.** `Inference:` CI ([QW-04](#qw-04-ci-workflow-audit-a16)) protects the F1 session-host rewrite (DEP-01); exit criteria demand real fixtures where audit A16 asks for them (M3 exit criterion 2).
 4. **No screen before its contract.** The M3 panel waits on the gap G2 format (DEP-06); the M4 screens wait on gap G3–G5 (DEP-09) and vision Q4 (DEP-08).
 5. **Identity sequencing is unresolved.** PR #30 migrates to a durable cursor before its multi-session registry (`pr30:docs/roadmap-memotux.md:29-31`); this page keeps stable message ids inside F1 (exit criterion 4) and does not adopt that split. See the debt-register note.
 
@@ -249,9 +249,9 @@ The invariants are proposed constraints **[community proposal]**; only the maint
 
 Scope note: this issue preserves the current milestone shape because decision #10 (roadmap shape) is unresolved — that is not a permanent invariant. Renaming or reordering milestones belongs to decision #10.
 
-1. **Full gates before consumers; partial gates gate only listed criteria.** Vision Q3 → F1 → M3 (DEP-02, DEP-05); M6 criterion 3 stays free of F1 (DEP-03).
+1. **Full gates before consumers; partial gates gate only listed criteria.** Vision Q3 → F1 → M3 (DEP-02, DEP-05); `Inference:` M6 criterion 3 stays free of F1 (DEP-03).
 2. **No screen ships on an unconfirmed contract.** M3 content waits on gap G2 (DEP-06); M4 waits on gap G3–G5 and vision Q4 (DEP-08, DEP-09).
-3. **User-data boundaries hold.** The user's pi `settings.json` is never edited (vision P3; M4 exit criterion 5); credentials never cross the renderer boundary (`Inference:` from M4's design).
+3. **User-data boundaries hold.** The user's pi `settings.json` is never edited (vision P3; M4 exit criterion 5); credentials never cross the renderer boundary (PR #30's proposal: Providers outcome and renderer ceiling, `pr30:docs/roadmap-memotux.md:145-146`, `:258-260`).
 
 **Change protocol.** Re-sequencing is a maintainer decision recorded with its reason, never a silent edit:
 
