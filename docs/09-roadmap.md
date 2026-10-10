@@ -371,7 +371,7 @@ A quick win here is a change that is **desktop-only** (no upstream change), **ne
 
 ## Relation to the earlier community roadmap (roadmap.txt)
 
-memoTux wrote the first community roadmap, deduced from the README and the M1 and M2 documents (`roadmap.txt:3-7`). `roadmap.txt` is the file memoTux attached to the Discord thread "Gentle Desktop" (Gentleman Programming Discord) on 2026-09-29; every `roadmap.txt:<line>` citation in this page refers to that file. This page builds on it. Its claims were checked against the code and the maintainer's documents ([issue #28, "Author's framing: facts checked before writing"](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28)).
+memoTux wrote the first community roadmap, deduced from the README and the M1 and M2 documents (`roadmap.txt:3-7`). `roadmap.txt` is the file memoTux attached to the Discord thread "Gentle Desktop" (Gentleman Programming Discord) on 2026-09-29; every `roadmap.txt:<line>` citation in this page refers to that file. This page builds on it. Its claims were checked against the code and the maintainer's documents ([issue #28, "Author's framing: facts checked before writing"](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28)). This page also carries [sequencing principles](#sequencing-principles), a [debt register](#debt-register), proposed [invariants and a change protocol](#invariants-and-change-protocol) and a recurring [release gate](#release-gate), adapted from PR #30.
 
 | | What | Evidence |
 |---|---|---|
@@ -392,6 +392,7 @@ memoTux wrote the first community roadmap, deduced from the README and the M1 an
 - Which decisions can be taken first? vision Q3 gates F1, and F1 gates M3 and part of M6.
 - Should the group file the pi Contribution Proposals for gap G3–G5 and the gentle-shell issue for gap G2 now, in parallel with F1?
 - Are quick wins welcome as small standalone PRs, outside a milestone chain?
+- Where does stable message identity land: a durable-cursor migration before the multi-chat registry (PR #30's order, `pr30:docs/roadmap-memotux.md:29-31`) or inside F1 (this page, exit criterion 4)?
 
 ## Sources read
 
