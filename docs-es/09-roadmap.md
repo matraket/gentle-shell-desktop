@@ -249,7 +249,7 @@ Nota: PR #30 migra a un cursor duradero antes que su registro multisesión (`pr3
 
 Las invariantes son restricciones propuestas **[community proposal]**; solo el mantenedor las mueve. Adaptado de PR #30 (`pr30:docs/roadmap-memotux.md:248-276`) con los nombres de hito de esta página.
 
-Nota de alcance: este issue conserva la forma actual de los hitos porque la decisión #10 (forma de la hoja de ruta) sigue sin resolverse — no es una invariante permanente. Renombrar o reordenar los hitos corresponde a la decisión #10.
+Nota de alcance: la forma de la hoja de ruta es en sí misma una pregunta abierta para el mantenedor; renombrar o reordenar los hitos no es una invariante.
 
 1. **Las condiciones totales antes que los consumidores; las parciales solo condicionan los criterios indicados.** vision Q3 → F1 → M3 (DEP-02, DEP-05); `Inference:` el criterio 3 de M6 sigue libre de F1 (DEP-03).
 2. **Ninguna pantalla se publica sobre un contrato sin confirmar.** El contenido de M3 espera a gap G2 (DEP-06); M4 espera a gap G3–G5 y a vision Q4 (DEP-08, DEP-09).
@@ -260,7 +260,7 @@ Nota de alcance: este issue conserva la forma actual de los hitos porque la deci
 - **Desencadenantes:** una suposición fallida (una decisión de vision se resuelve de forma distinta a la supuesta); una actualización mayor de pi (primero se repite la puerta de versión); un incidente en un área de deuda (el hito responsable se adelanta); nueva evidencia sobre una pregunta abierta.
 - **Revisión de impacto:** volver a comprobar la tabla DEP, el registro de deuda y los criterios de salida afectados antes de mover trabajo.
 - **Autoridad:** el mantenedor decide; las propuestas de la comunidad siguen etiquetadas como **[community proposal]**.
-- **Actualizaciones sincronizadas:** el inglés y el español cambian en la misma unidad de trabajo, impuesto por `.fork/check-mirror.py`.
+- **Actualizaciones sincronizadas:** cada edición de idioma de esta página cambia en la misma unidad de trabajo.
 
 ## Puerta de versión
 
