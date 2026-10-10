@@ -373,7 +373,7 @@ Un quick win es aquí un cambio que es **solo del escritorio** (sin cambio upstr
 
 ## Relación con la hoja de ruta anterior de la comunidad (roadmap.txt)
 
-memoTux escribió la primera hoja de ruta de la comunidad, deducida del README y de los documentos de M1 y M2 (`roadmap.txt:3-7`). `roadmap.txt` es el archivo que memoTux adjuntó al hilo de Discord "Gentle Desktop" (Discord de Gentleman Programming) el 2026-09-29; todas las citas `roadmap.txt:<line>` de esta página se refieren a ese archivo. Esta página se basa en ella. Sus afirmaciones se contrastaron con el código y con los documentos del mantenedor ([issue #28, "Author's framing: facts checked before writing"](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28)).
+memoTux escribió la primera hoja de ruta de la comunidad, deducida del README y de los documentos de M1 y M2 (`roadmap.txt:3-7`). `roadmap.txt` es el archivo que memoTux adjuntó al hilo de Discord "Gentle Desktop" (Discord de Gentleman Programming) el 2026-09-29; todas las citas `roadmap.txt:<line>` de esta página se refieren a ese archivo. Esta página se basa en ella. Sus afirmaciones se contrastaron con el código y con los documentos del mantenedor ([issue #28, "Author's framing: facts checked before writing"](https://github.com/Gentleman-Programming/gentle-shell-desktop/issues/28)). Esta página también lleva [principios de secuenciación](#principios-de-secuenciación), un [registro de deuda](#registro-de-deuda), [invariantes y un protocolo de cambios](#invariantes-y-protocolo-de-cambios) propuestos y una [puerta de versión](#puerta-de-versión) recurrente, adaptados de PR #30.
 
 | | Qué | Evidencia |
 |---|---|---|
@@ -394,6 +394,7 @@ memoTux escribió la primera hoja de ruta de la comunidad, deducida del README y
 - ¿Qué decisiones pueden tomarse primero? vision Q3 condiciona F1, y F1 condiciona M3 y parte de M6.
 - ¿Debería el grupo presentar ya las Contribution Proposals de pi para gap G3–G5 y la issue de gentle-shell para gap G2, en paralelo con F1?
 - ¿Son bienvenidos los quick wins como PR pequeñas e independientes, fuera de una cadena de hito?
+- ¿Dónde aterriza la identidad estable de los mensajes: en una migración a un cursor duradero antes del registro multisesión (el orden de PR #30, `pr30:docs/roadmap-memotux.md:29-31`) o dentro de F1 (esta página, criterio de salida 4)?
 
 ## Fuentes leídas
 
