@@ -205,13 +205,13 @@ There is no global store. `App` holds the selection, and the pushed `ChatState` 
 
 | State | Owner | Notes | Evidence |
 |---|---|---|---|
-| Active-chat selection (`ActiveChat`: new vs existing) | `App` | Local `useState`; `ChatsContainer` only reports selection intent up. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60` |
+| Active-chat selection (`ActiveChat`: new vs existing) | `App` | Local `useState`; `ChatsContainer` only reports selection intent up. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60`; `src/renderer/features/chats/ChatsContainer.tsx:20-22` |
 | Conversation `ChatState` (messages, working, dialogs, helpers) | `ConversationContainer` | The pushed state is the thread's single source of truth; opens via `openChat`/`newChat`, subscribes via `onState`/`onError`. | `src/renderer/features/conversation/ConversationContainer.tsx:39-49`, `:60-67`, `:81-95` |
 | Conversation pane and `helpersOpenedAt` | `ConversationContainer` | Resets to the chat pane whenever the selected chat changes. | `src/renderer/features/conversation/ConversationContainer.tsx:51-56`, `:76-79` |
 | Helper selection and view flags (`selectedTaskId`, `followLive`, `showToolDetails`) | `HelpersContainer` (props only, no bridge calls) | Receives `ChatState.helpers` as the `activity` prop from `ConversationContainer`. | `src/renderer/features/helpers/HelpersContainer.tsx:30-42` |
 | Persisted home choice (`{home}`) | Main `SetupService` + `AppConfigStore` | The renderer only reads `setupStatus()` and writes via `chooseHome()` (`FirstRunContainer`) and switches screens (`App`); persistence lives in main. | `src/main/adapters/setupService.ts:21-41`; `src/main/adapters/appConfigStore.ts:20-42`; `src/renderer/features/first-run/FirstRunContainer.tsx:23-49`; `src/renderer/app/App.tsx:32-52` |
 
-Renderer isolation here means `contextIsolation: true` with `nodeIntegration: false` and `sandbox: false`: the renderer is isolated from Node through the preload bridge, not placed in the Chromium OS-level sandbox (`src/main/index.ts:83-85`; `src/preload/index.ts:1-4`).
+Renderer isolation rests on three independent settings (`src/main/index.ts:83-85`). `contextIsolation: true` separates the preload's context from the page's context, so the two never share JavaScript objects. `nodeIntegration: false` disables Node integration for scripts running in the page. `sandbox: false` disables renderer sandboxing, so the preload is not sandboxed (Electron [Process Sandboxing](https://www.electronjs.org/docs/latest/tutorial/sandbox) and [Context Isolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation), read 2026-10-10). The page reaches the app only through the APIs the preload deliberately exposes with `contextBridge.exposeInMainWorld` (`src/preload/index.ts:1-4`).
 
 ## Data paths to pi
 

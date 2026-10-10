@@ -207,13 +207,13 @@ No hay un store global. `App` mantiene la selección, y el `ChatState` recibido 
 
 | Estado | Responsable | Notas | Evidencia |
 |---|---|---|---|
-| Selección del chat activo (`ActiveChat`: nuevo frente a existente) | `App` | `useState` local; `ChatsContainer` solo comunica la intención de selección hacia arriba. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60` |
+| Selección del chat activo (`ActiveChat`: nuevo frente a existente) | `App` | `useState` local; `ChatsContainer` solo comunica la intención de selección hacia arriba. | `src/renderer/app/App.tsx:19-24`, `:35`, `:54-60`; `src/renderer/features/chats/ChatsContainer.tsx:20-22` |
 | `ChatState` de la conversación (mensajes, trabajo en curso, diálogos, helpers) | `ConversationContainer` | El estado recibido es la única fuente de verdad del hilo; abre con `openChat`/`newChat` y se suscribe con `onState`/`onError`. | `src/renderer/features/conversation/ConversationContainer.tsx:39-49`, `:60-67`, `:81-95` |
 | Panel de la conversación y `helpersOpenedAt` | `ConversationContainer` | Vuelve al panel de chat cada vez que cambia el chat seleccionado. | `src/renderer/features/conversation/ConversationContainer.tsx:51-56`, `:76-79` |
 | Selección de helper y flags de vista (`selectedTaskId`, `followLive`, `showToolDetails`) | `HelpersContainer` (solo props, sin llamadas al puente) | Recibe `ChatState.helpers` como prop `activity` desde `ConversationContainer`. | `src/renderer/features/helpers/HelpersContainer.tsx:30-42` |
 | Elección de home persistida (`{home}`) | `SetupService` principal + `AppConfigStore` | El renderer solo lee `setupStatus()` y escribe con `chooseHome()` (`FirstRunContainer`) y cambia de pantalla (`App`); la persistencia vive en el proceso principal. | `src/main/adapters/setupService.ts:21-41`; `src/main/adapters/appConfigStore.ts:20-42`; `src/renderer/features/first-run/FirstRunContainer.tsx:23-49`; `src/renderer/app/App.tsx:32-52` |
 
-El aislamiento del renderer aquí significa `contextIsolation: true` con `nodeIntegration: false` y `sandbox: false`: el renderer queda aislado de Node a través del puente del preload, no situado en el sandbox del sistema operativo de Chromium (`src/main/index.ts:83-85`; `src/preload/index.ts:1-4`).
+El aislamiento del renderer se apoya en tres ajustes independientes (`src/main/index.ts:83-85`). `contextIsolation: true` separa el contexto del preload del contexto de la página, de modo que nunca comparten objetos de JavaScript. `nodeIntegration: false` desactiva la integración de Node para los scripts que se ejecutan en la página. `sandbox: false` desactiva el sandbox del renderer, de modo que el preload no va en sandbox (Electron [Process Sandboxing](https://www.electronjs.org/docs/latest/tutorial/sandbox) y [Context Isolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation), consultado el 2026-10-10). La página llega a la aplicación solo a través de las APIs que el preload expone deliberadamente con `contextBridge.exposeInMainWorld` (`src/preload/index.ts:1-4`).
 
 ## Caminos de datos hacia pi
 
