@@ -35,6 +35,8 @@ Desktop line numbers are in `D:renderer/shared/theme/tokens.css`; `theme.ts` key
 
 **Theme vars the desktop does not use** (`D:renderer/shared/theme/gentleman-cute.json:4-31`): `bgElement`, `bgSubtle`, `infoBg`, `toolPendingBg` (all `#100A0F`), `dim` `#76616B`, `softRose` `#D7A0B8`, `sky` `#C4DAF6`, `selection` `#28121E`, `toolSuccessBg` `#151316`, `toolErrorBg` `#261019`. The theme also maps 55 semantic `colors` (markdown, syntax, thinking levels, tool states, diffs) to these vars (`:32-88`); the desktop has no equivalent semantic layer.
 
+PR #30 estimated theme values from screenshots (`pr30:docs/frontend-renderer-design.md:11-23`); the exact ones live in `D:renderer/shared/theme/gentleman-cute.json:4-31` and are already copied line by line in the table above. The provisional and exact values are close but none matches exactly; treat this table as canonical.
+
 ### Font and shape tokens
 
 | Token | Desktop (`tokens.css`) | Mockup (`gs-mockup.html`) |
