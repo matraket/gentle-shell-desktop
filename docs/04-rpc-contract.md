@@ -376,7 +376,7 @@ The facts below are the pi client data of PR #30 (`pr30:docs/pi-rpc-mode.md`), r
 ### Command, event and launch caveats
 
 - RPC mode rejects `@file` prompt arguments; prompts go through `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
-- `get_commands` lists extension commands, prompt templates and skills only; built-in TUI commands such as `/settings` are neither listed nor executable through `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/src/modes/interactive/interactive-mode.ts:700-716`). See [inventory C12](05-capability-inventory.md#conversation-and-input).
+- `get_commands` lists extension commands, prompt templates and skills only; built-in TUI commands such as `/settings` are neither listed nor executable through `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:834`, `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:680-710`). See [inventory C12](05-capability-inventory.md#conversation-and-input).
 - Esc emulation over RPC: read the pending text from `clear_queue`, send `abort`, then restore the text into the client editor (`pr30:docs/pi-rpc-mode.md:170-171`).
 - `bash` output reaches the model on the next `prompt`, not immediately, unless `excludeFromContext` is set (`pr30:docs/pi-rpc-mode.md:176-178`).
 - RPC emits no session header record; read the session id and file from `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). See [Events](#events-runtime--desktop).

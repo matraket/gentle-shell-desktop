@@ -378,7 +378,7 @@ Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc
 ### Advertencias de comandos, eventos y lanzamiento
 
 - El modo RPC rechaza los argumentos de prompt `@file`; los prompts pasan por `prompt` (`pr30:docs/pi-rpc-mode.md:51-52`; `pi@a13d35a:packages/coding-agent/docs/rpc.md:20`).
-- `get_commands` solo enumera comandos de extensión, plantillas de prompt y skills; los comandos TUI integrados como `/settings` ni se enumeran ni son ejecutables mediante `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/src/modes/interactive/interactive-mode.ts:700-716`). Ver [inventory C12](05-capability-inventory.md#conversación-y-entrada).
+- `get_commands` solo enumera comandos de extensión, plantillas de prompt y skills; los comandos TUI integrados como `/settings` ni se enumeran ni son ejecutables mediante `prompt` (`pr30:docs/pi-rpc-mode.md:179-181`; `pi@a13d35a:packages/coding-agent/docs/rpc-commands.md:834`, `pi@a13d35a:packages/coding-agent/src/modes/rpc/rpc-mode.ts:680-710`). Ver [inventory C12](05-capability-inventory.md#conversación-y-entrada).
 - Emulación de Esc sobre RPC: lee el texto pendiente con `clear_queue`, envía `abort` y restaura el texto en el editor del cliente (`pr30:docs/pi-rpc-mode.md:170-171`).
 - La salida de `bash` llega al modelo en el siguiente `prompt`, no de inmediato, salvo que se defina `excludeFromContext` (`pr30:docs/pi-rpc-mode.md:176-178`).
 - RPC no emite ningún registro de cabecera de sesión; lee el id y el archivo de la sesión con `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). Ver [Eventos](#eventos-runtime--escritorio).
