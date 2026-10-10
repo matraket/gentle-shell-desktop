@@ -14,7 +14,7 @@ Ideas de la comunidad que van más allá de la paridad con gentle-shell. Viven a
 | [0002](0002-interact-with-running-node.md) | Interactuar con un nodo en ejecución | Matrak (comunidad) | `proposed` | gap G1, redirección (inventory C4, A6) |
 | [0003](0003-post-hoc-audit-by-questions.md) | Auditoría a posteriori mediante preguntas (helpers que han terminado) | Matrak (comunidad) | `proposed` | gap G8, historial de helpers (inventory A12) |
 | [0004](0004-host-service.md) | Servicio host local compartido | Matrak (comunidad) | `proposed` | audit A3 y gap G9 (roadmap F1), audit A1, A8, A14 |
-| [0005](0005-session-process-design.md) | Diseño de procesos de sesión por chat | memoTux (@memotux, comunidad) | `proposed` | audit A3, gap G9 (roadmap F1) |
+| [0005](0005-session-process-design.md) | Diseño de procesos de sesión por chat | memoTux (@memotux, comunidad) | `proposed` | audit A3, gap G9 (vision Q3, roadmap F1) |
 
 Los ID de otros documentos van cualificados porque se repiten (inventory A1–A12 y U1–U8, audit A1–A21, UX U1–U12): `gap G1` procede del [contrato RPC](../04-rpc-contract.md#carencias-que-necesita-el-escritorio), `inventory C4` del [inventario de capacidades](../05-capability-inventory.md), `audit A5` de la [auditoría de arquitectura](../03-architecture/audit.md#hallazgos), `vision P10` y `vision Q5` de la [visión](../00-vision.md), `UX U2` de los [principios de UX](../06-ux/principles.md). Un cualificador abarca los ID que se enumeran tras él (`inventory C4, A6`).
 
