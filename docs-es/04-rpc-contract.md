@@ -384,7 +384,7 @@ Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc
 - RPC no emite ningún registro de cabecera de sesión; lee el id y el archivo de la sesión con `get_state` (`pr30:docs/pi-rpc-mode.md:185-187`). Ver [Eventos](#eventos-runtime--escritorio).
 - `message_update.usage` es el último uso acumulado notificado por el proveedor y puede permanecer en cero hasta que se complete la respuesta (`pr30:docs/pi-rpc-mode.md:208-210`). Ver [`message_update` tipos de delta](#tipos-de-delta-de-message_update).
 - La exportación de subruta `@earendil-works/pi-coding-agent/rpc-entry` es solo de importación: ejecuta `main(["--mode", "rpc", ...argv])` y define `process.title = "pi-rpc"`; el único ejecutable es `pi` y no existe un binario `pi-rpc` aparte (`pr30:docs/pi-rpc-mode.md:46-50`).
-- Una respuesta correcta de `prompt` significa que el prompt se aceptó, se encoló o se gestionó, nunca que la ejecución haya terminado (`pr30:docs/pi-rpc-mode.md:99-105`). Desde pi 0.99.x también incluye `data.disposition` (`"started"`, `"queued"`, `"handled"`); el ejemplo de la PR #30 es anterior (ver [Diferencias entre pi 0.85.1 y 0.99.1 (comandos)](#diferencias-entre-pi-0851-y-0991-comandos)).
+- Una respuesta correcta de `prompt` significa que el prompt se aceptó, se encoló o se gestionó, nunca que la ejecución haya terminado (`pr30:docs/pi-rpc-mode.md:99-105`). Desde pi 0.99.x también incluye `data.disposition` (`"started"`, `"queued"`, `"handled"`); el ejemplo de la PR #30 es anterior (ver [Diferencias entre pi 0.85.1 y 0.99.1 (comandos)](#diferencias-entre-pi-0851-y-0991-comandos)). Si `data.disposition` es `"handled"`, no se inició ninguna ejecución, así que no esperes a `agent_settled` (ver [semántica de `"handled"`](#diferencias-entre-pi-0851-y-0991-comandos)).
 
 ### Advertencias de la UI de extensiones
 
@@ -403,7 +403,7 @@ Los datos siguientes son los datos de cliente pi de la PR #30 (`pr30:docs/pi-rpc
 2. Lee stdout continuamente y reserva stderr para el diagnóstico.
 3. Pon un `id` único en cada comando y correlaciona las respuestas por `id`, no por orden.
 4. Suscríbete a los eventos antes del primer prompt.
-5. Espera a `agent_settled`, no a `agent_end`.
+5. Espera a `agent_settled`, no a `agent_end`, salvo que la respuesta de `prompt` traiga `data.disposition` `"handled"`.
 6. Recompón el texto a partir de los deltas de `message_update` y confía en `message_end`.
 7. Responde a cada diálogo que muestres o deja que expire por timeout.
 8. Cierra stdin para apagar con orden y sigue gestionando señales y salidas inesperadas (`pr30:docs/pi-rpc-mode.md:343-352`).
