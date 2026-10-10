@@ -247,7 +247,7 @@ Note: PR #30 migrates to a durable cursor before its multi-session registry (`pr
 
 The invariants are proposed constraints **[community proposal]**; only the maintainer moves them. Adapted from PR #30 (`pr30:docs/roadmap-memotux.md:248-276`) with this page's milestone names.
 
-Scope note: this issue preserves the current milestone shape because decision #10 (roadmap shape) is unresolved — that is not a permanent invariant. Renaming or reordering milestones belongs to decision #10.
+Scope note: the roadmap's shape is itself an open question for the maintainer; renaming or reordering milestones is not an invariant.
 
 1. **Full gates before consumers; partial gates gate only listed criteria.** Vision Q3 → F1 → M3 (DEP-02, DEP-05); `Inference:` M6 criterion 3 stays free of F1 (DEP-03).
 2. **No screen ships on an unconfirmed contract.** M3 content waits on gap G2 (DEP-06); M4 waits on gap G3–G5 and vision Q4 (DEP-08, DEP-09).
@@ -258,7 +258,7 @@ Scope note: this issue preserves the current milestone shape because decision #1
 - **Triggers:** a failed assumption (a vision decision resolves differently than assumed); a pi major upgrade (the release gate re-runs first); an incident in a debt area (the owning milestone pulls forward); new evidence on an open question.
 - **Impact review:** re-check the DEP table, the debt register and the affected exit criteria before moving work.
 - **Authority:** the maintainer decides; community proposals stay labelled **[community proposal]**.
-- **Synchronized updates:** English and Spanish change in the same work unit, enforced by `.fork/check-mirror.py`.
+- **Synchronized updates:** every language edition of this page changes in the same work unit.
 
 ## Release gate
 
