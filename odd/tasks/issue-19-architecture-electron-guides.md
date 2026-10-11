@@ -15,7 +15,7 @@ Resolve matraket/gentle-shell-desktop#19's documentation placement question by r
 - Update every changed English corpus document's Spanish mirror in the same work unit.
 - Preserve the project's line-citation, provenance, English/Spanish structural mirror, and fork-only delivery rules.
 - Follow matraket/gentle-shell-desktop#19's topic-branch convention from `docs/integration`; do not push, open another PR, post review replies, or merge without explicit user authorization.
-- The user approved implementing review 5476450841 on 2026-10-10. Local work-unit commits are authorized for this round; GitHub PR-body edits and delivery remain separate actions.
+- Local work-unit commits are authorized for this round; GitHub PR-body edits and delivery remain separate actions.
 
 ## Tasks
 
@@ -24,13 +24,10 @@ Resolve matraket/gentle-shell-desktop#19's documentation placement question by r
 - [x] R3 Move the issue changes onto a dedicated topic branch based on `docs/integration`.
 - [x] R4 Add the path-alias notes and relocate the pi-import correction to the data-paths section.
 
-## PR #24 owner-review response (5476450841)
+## matraket/gentle-shell-desktop#24 owner-review response
 
-- [x] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **Done** — commit `3a31957`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
-- [x] R6 Apply the remaining optional notes (alias citations, local chats/error ownership, Spanish terminology, and qualified issue references), verify mirror/citation/diff hygiene, and record work-unit commit evidence. **Done** — commit `6f3c03d`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
-- PR description note remains outside this local worktree implementation; do not edit the hosted PR body or post a reply without separate authorization.
-- R5 complete: commit `3a31957` updates both current-architecture editions and both A14 editions with dated Electron sources, precise isolation/sandbox semantics, and the `ChatsContainer` citation; the task record now reflects commits `aacf0ab`, `cca22b7`, and PR #24. Independent verification passed: mirror 37/0 and `git diff --check` clean.
-- R6 complete: commit `6f3c03d` adds precise alias citations, the `ChatsContainer` local `chats`/`error` state row, the Spanish main-process wording, and fully qualified issue references. Independent full-round verification passed: mirror 37/0 and `git diff --check` clean; no functional tests apply to this documentation-only round.
+- [x] R5 Add the required dated Electron-source corrections in both language editions, cite `ChatsContainer` for the selection-intent claim, and correct the feature record's stale delivery status. **Done** — commit `8718662`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
+- [x] R6 Apply the remaining optional notes (alias citations, local chats/error ownership, Spanish terminology, and qualified issue references), verify mirror/citation/diff hygiene, and record work-unit commit evidence. **Done** — commit `028b29b`; mirror check: 37 pairs / 0 problems; `git diff --check` clean.
 
 ## Acceptance criteria
 
@@ -49,5 +46,42 @@ Resolve matraket/gentle-shell-desktop#19's documentation placement question by r
 - R3 complete: created `consolidation/architecture-guides` from `docs/integration` at `b6c0eeb`; ancestry check passed and the working changes were preserved.
 - R4 complete: added a single-line **Path aliases** bullet after **Build.** in both languages (`electron.vite.config.ts:13`, `:21`, `:34-35`; `vitest.config.ts:15-16`), and moved the pi-import sentence out of the state-ownership paragraph into a new intro paragraph under *Data paths to pi*, where a reader asking about pi's module graph now finds it. Independent verifier confirmed the placement, cited lines exactly, Spanish N+2 alignment, and both mirror checks (37 pairs, 0 problems). No file cites `current.md` by line number, so the +15-line shift invalidates nothing.
 - Guide disposition: recorded in the PR body only, per the human decision. No corpus note was added; the delivered corpus keeps describing the product, not editorial history.
-- Original change size: six corpus files, +36/-6; no source code changed. The original corpus and task-record commits are `aacf0ab` and `cca22b7`.
-- Original implementation is in [matraket/gentle-shell-desktop#24](https://github.com/matraket/gentle-shell-desktop/pull/24). The user authorized pushing this worktree branch to the existing PR #24 target, `matraket/gentle-shell-desktop`, on 2026-10-10. The PR body and review thread remain unchanged.
+- Original change size: six corpus files, +36/-6; no source code changed. The original corpus and task-record commits are `bf4cf1f` and `8100d7a`.
+- Original implementation is in [matraket/gentle-shell-desktop#24](https://github.com/matraket/gentle-shell-desktop/pull/24). The PR body and review thread remain unchanged.
+
+## Owner optional-notes round (head `eccb5fca`)
+
+### Constraints and scope
+
+- Trigger: the repository owner's optional notes on the approved review at `eccb5fca`; addressed because the author took time to write them.
+- `odd/` travels upstream: this record must carry no fork process history (prior review ids, push authorizations, PR-description notes) and no bare fork issue/PR numbers; references stay fully qualified as `matraket/gentle-shell-desktop#N`.
+- Post-rebase commit hashes must be named: the branch was rebased on GitHub, every commit hash changed, and the pre-rebase hashes no longer resolve on the hosted branch.
+- English and Spanish change together: the Spanish A14 sandbox wording mirrors the unchanged English original in the same work unit.
+- Docs-only round with structural verification: mirror check, `git diff --check`, `git diff --stat`, `git status --short`, and a targeted stale-reference grep. No functional tests apply.
+
+### Tasks
+
+| ID | Task | Route | Status | Evidence |
+|---|---|---|---|---|
+| T1 | Trim fork process history and qualify the owner-review heading | `gentle-ai-worker` | done | Heading now reads `## matraket/gentle-shell-desktop#24 owner-review response`; the review-id sentence and the push-authorization clause are gone. Targeted stale-reference grep returned zero matches. |
+| T2 | Remove the duplicated R5/R6 "complete" bullets | `gentle-ai-worker` | done | Both duplicated evidence bullets deleted; the R5/R6 checkboxes remain separated from `## Acceptance criteria` by exactly one blank line. |
+| T3 | Remove the PR-description line | `gentle-ai-worker` | done | The PR-description authorization line no longer appears anywhere in this record. |
+| T4 | Refresh post-rebase hashes in the checkboxes and the provenance bullet | `gentle-ai-worker` | done | R5 now cites `8718662`, R6 now cites `028b29b`, and the original corpus/task-record commits read `bf4cf1f` and `8100d7a`. |
+| T5 | Spanish A14 wording mirror | `gentle-ai-worker` | done | `docs-es/03-architecture/audit.md` A14 now reads `separado del aislamiento de contexto`; the English original stays unchanged. |
+| T6 | Record this work unit | parent | pending | The commit hash is recorded in the PR body Process section and the Engram mirror after the push — a commit hash cannot be recorded inside its own commit. |
+
+### Progress
+
+- Observed verification output from this worktree (the stale-reference grep is shown without its pattern, because the pattern itself consists of the retired strings this round removed):
+
+```
+$ python3 .fork/check-mirror.py
+38 pairs checked, 0 problems
+$ git diff --check
+(no output; exit 0)
+$ git status --short
+ M docs-es/03-architecture/audit.md
+ M odd/tasks/issue-19-architecture-electron-guides.md
+$ grep -nE '<stale references>' odd/tasks/issue-19-architecture-electron-guides.md
+(no matches; exit 1)
+```
