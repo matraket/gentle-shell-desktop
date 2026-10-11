@@ -6,7 +6,7 @@
 
 El escritorio tiene un tema fijo en el código, Gentleman-Cute, en forma de 16 tokens de color y 3 tokens de fuente en CSS (`D:renderer/shared/theme/tokens.css:8-29`). La maqueta conceptual (mockup) usa los mismos 15 colores con nombres en parte distintos, más un token de radio. gentle-shell incluye tres temas; hoy el escritorio no puede cambiar entre ellos. Los componentes de UI compartidos son tres átomos: Button, Pill y TextField.
 
-**Claves de cita.** `D:` es `gentle-shell-desktop@5ab4a00:src/`. `GS:` es `gentle-shell@ac67159:` (`main` de gentle-shell, versión de paquete 4.0.0; `themes/` y las líneas citadas de `package.json` no han cambiado desde `1162ce9`, 3.7.0). `gs-mockup.html:<line>` es el DOM guardado de la maqueta conceptual (intención, no especificación). Todos los valores que siguen se copiaron de la línea citada.
+**Claves de cita.** `D:` es `gentle-shell-desktop@5ab4a00:src/`. `GS:` es `gentle-shell@ac67159:` (`main` de gentle-shell, versión de paquete 4.0.0; `themes/` y las líneas citadas de `package.json` no han cambiado desde `1162ce9`, 3.7.0). `gs-mockup.html:<line>` es el DOM guardado de la maqueta conceptual (intención, no especificación). `pr30:` cita [PR #30](https://github.com/Gentleman-Programming/gentle-shell-desktop/pull/30) en `cd6d72f`. Todos los valores que siguen se copiaron de la línea citada.
 
 ## Tokens
 
@@ -37,7 +37,7 @@ Los números de línea del escritorio están en `D:renderer/shared/theme/tokens.
 
 **Variables del tema que el escritorio no usa** (`D:renderer/shared/theme/gentleman-cute.json:4-31`): `bgElement`, `bgSubtle`, `infoBg`, `toolPendingBg` (todas `#100A0F`), `dim` `#76616B`, `softRose` `#D7A0B8`, `sky` `#C4DAF6`, `selection` `#28121E`, `toolSuccessBg` `#151316`, `toolErrorBg` `#261019`. El tema también asigna 55 `colors` semánticos (markdown, sintaxis, niveles de razonamiento, estados de herramienta, diffs) a estas variables (`:32-88`); el escritorio no tiene una capa semántica equivalente.
 
-PR #30 estimó los valores del tema a partir de capturas (`pr30:docs/frontend-renderer-design.md:11-23`); los exactos están en `D:renderer/shared/theme/gentleman-cute.json:4-31` y ya están copiados línea por línea en la tabla anterior. Los valores provisionales y los exactos son cercanos pero ninguno coincide exactamente; trata esta tabla como canónica.
+PR #30 estimó los valores del tema a partir de capturas (`pr30:docs/frontend-renderer-design.md:11-23`); los exactos están en `D:renderer/shared/theme/gentleman-cute.json:4-31` y ya están copiados línea por línea: 16 de los 26 en la tabla anterior y los otros 10 en la lista anterior. Los valores provisionales y los exactos son cercanos pero ninguno coincide exactamente; trata esta tabla como canónica.
 
 ### Tokens de fuente y forma
 
@@ -153,4 +153,4 @@ pi también tiene los temas integrados `system`, `dark` y `light` ([inventory E6
 
 ## Fuentes leídas
 
-`gentle-shell-desktop@5ab4a00`: `src/renderer/shared/theme/{tokens.css,theme.ts,theme.test.ts,gentleman-cute.json}`, `src/renderer/shared/ui/atoms/*`, `src/renderer/index.html`, `src/renderer/main.tsx`, `src/renderer/app/App.css`, CSS de los componentes citados arriba; `gs-mockup.html` L2–457; `gentle-shell@ac67159:themes/*.json`, `package.json` (comprobado de nuevo el 2026-10-03: `git diff 1162ce9 ac67159 -- themes` está vacío).
+`gentle-shell-desktop@5ab4a00`: `src/renderer/shared/theme/{tokens.css,theme.ts,theme.test.ts,gentleman-cute.json}`, `src/renderer/shared/ui/atoms/*`, `src/renderer/index.html`, `src/renderer/main.tsx`, `src/renderer/app/App.css`, CSS de los componentes citados arriba; `gs-mockup.html` L2–457; `gentle-shell@ac67159:themes/*.json`, `package.json` (comprobado de nuevo el 2026-10-03: `git diff 1162ce9 ac67159 -- themes` está vacío); `pr30:docs/frontend-renderer-design.md` ([PR #30](https://github.com/Gentleman-Programming/gentle-shell-desktop/pull/30) en `cd6d72f`).
