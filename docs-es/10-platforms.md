@@ -93,6 +93,7 @@ Cada pieza tiene cuatro filas: lo que dice su **documentación** (una declaraci�
 - **macOS.** Las aplicaciones abiertas desde Finder no tienen el `PATH` de la shell, así que no se encuentran `gentle-shell` ni `node` (`gentle-shell-desktop@5ab4a00:README.md:52-58`; audit A18).
 - **Windows.** gentle-ai ya sortea los procesos con un `PATH` desactualizado en Windows ("Fresh install detection falls back to known Engram/GGA install locations", `gentle-ai@ff77164:docs/platforms.md:65`), y avisa cuando `go install` escribe fuera del `PATH` resuelto (`docs/platforms.md:55`). `UNVERIFIED:` si un escritorio iniciado desde el menú Inicio ve un `PATH` modificado por un `npm i -g` reciente.
 - **Linux.** `UNVERIFIED:` no se comprobó el entorno de un `AppImage` iniciado desde un acceso directo del entorno de escritorio.
+- **Un servicio iniciado sin terminal.** **[community]** Según el [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) (acordado por los dos autores de la comunidad, pendiente del mantenedor) los hijos heredan el entorno del servicio, así que un servicio iniciado al entrar en la sesión ([CT-03](13-clients-and-topologies.md#preguntas-abiertas)) transmite poco. `Inference:` necesita al menos el `PATH` de la shell de inicio de sesión, la corrección que la auditoría recomienda para la app de macOS ([audit A18](03-architecture/audit.md#a18-descubrimiento-del-lanzador-y-cobertura-de-plataformas)).
 
 ### Directorios home
 

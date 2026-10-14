@@ -91,6 +91,7 @@ Each piece has four rows: what its **docs** say (a support statement, or only a 
 - **macOS.** Apps opened from Finder lack the shell `PATH`, so `gentle-shell` and `node` are not found (`gentle-shell-desktop@5ab4a00:README.md:52-58`; audit A18).
 - **Windows.** gentle-ai already works around processes with a stale `PATH` on Windows ("Fresh install detection falls back to known Engram/GGA install locations", `gentle-ai@ff77164:docs/platforms.md:65`), and warns when `go install` writes outside the resolved `PATH` (`docs/platforms.md:55`). `UNVERIFIED:` whether a desktop started from the Start menu sees a `PATH` changed by a recent `npm i -g`.
 - **Linux.** `UNVERIFIED:` the environment of an `AppImage` started from a desktop launcher was not checked.
+- **A service started without a terminal.** **[community]** Under [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) (agreed by both community authors, pending the maintainer) children inherit the service's environment, so a service started at login ([CT-03](13-clients-and-topologies.md#open-questions)) passes on little. `Inference:` it needs at least the login shell's `PATH`, the fix the audit recommends for the macOS app ([audit A18](03-architecture/audit.md#a18-launcher-discovery-and-platform-coverage)).
 
 ### Home directories
 
