@@ -67,6 +67,12 @@
 - **Authentication.** Device pairing with a per-device credential that can be revoked (HP-02, option (b)). T3 Code: "Pairing authorizes that device for future connections" (`t3code@eac52f0:docs/user/remote-access.md:59`), and the host can "revoke client sessions" (`:148-150`).
 - **What it needs from 12.** `Inference:` an app-store build updates on its own schedule, so it needs a versioning rule that tolerates skew (HP-01). On a mobile network, full snapshots cost bandwidth (HP-06) and slow links need a buffer bound (HP-04). Two clients may act on one chat, for example a phone and the desktop answering one dialog (HP-03).
 
+### Terminal (gentle-shell TUI)
+
+- **Not a client of the service.** **[community]** Agreed in [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5), pending the maintainer. The terminal TUI runs its own pi in its own process, so a TUI and a service child on one session make two writers, and pi takes no lock (`pi@a13d35a:packages/coding-agent/src/core/session-manager.ts:1187`). pi sessions are a tree that allows "in-place branching without creating new files" (`pi@a13d35a:packages/coding-agent/docs/session-format.md:3`). `Inference:` (not run) the likely result is two branches in one file, each process following its own and neither seeing the other.
+- **A session started in the terminal publishes itself to the service**, so other clients can attach to it. gentle-shell would do this through an extension; extensions can already inject messages (`pi.sendUserMessage()`, `pi@a13d35a:packages/coding-agent/docs/extensions.md:79`). Without a running service, the terminal works alone, as today. `UNVERIFIED:` whether an extension can observe streaming output and other extensions' dialogs.
+- **Known limit, not decided.** Resuming in the terminal (`--resume`) a session that a service child already holds starts a second writer and forks the session. The same happens today between two terminals, so the service does not introduce it; preventing it would need a lock in pi.
+
 ## Topologies
 
 | | Clients | Service | Runtime (`gentle-shell --mode rpc` children) | Route to the service | In this proposal |
