@@ -4,7 +4,7 @@
 
 > **[community] proposal, not current state.** This page details the architecture of the shared local host service proposed in [proposal 0004](07-proposals/0004-host-service.md). Nothing here exists in the desktop repository today, and nothing here is decided. The current architecture is in [03-architecture/current.md](03-architecture/current.md).
 
-**In one paragraph.** **[community]** The host service is one local process that owns every chat session, spawns one `gentle-shell --mode rpc` child per chat, normalizes their output once, and serves Electron, a browser tab and a future mobile app over one WebSocket protocol ([proposal 0004](07-proposals/0004-host-service.md#proposal)). Most of it already exists in the desktop's main process: the domain, ports and adapters do not import Electron, and only the composition root, the IPC handlers and the preload do. What is missing is a session registry, a transport, authentication and a composition root that runs without Electron. Six runtime requirements (B1–B6) come first; four of them are desktop fixes that are useful without any service. Where the service runs and where it keeps its configuration are open questions.
+**In one paragraph.** **[community]** The host service is one local process that owns every chat session, spawns one `gentle-shell --mode rpc` child per chat, normalizes their output once, and serves Electron, a browser tab and a future mobile app over one WebSocket protocol ([proposal 0004](07-proposals/0004-host-service.md#proposal)). Most of it already exists in the desktop's main process: the domain, ports and adapters do not import Electron, and only the composition root, the IPC handlers and the preload do. What is missing is a session registry, a transport, authentication and a composition root that runs without Electron. Six runtime requirements (B1–B6) come first; four of them are desktop fixes that are useful without any service. Where the service runs and where it keeps its configuration are open questions for the maintainer; on where it runs, both community authors agreed on a separate process ([Process placement](#process-placement-open)).
 
 ## How to read this page
 
@@ -29,7 +29,7 @@
 | What is new? | A service composition root, a WebSocket transport, a session registry and authentication. | [Component map](#component-map-current-to-service) |
 | What must change first? | B1–B6. B1, B2, B5 and B6 are desktop fixes that are useful anyway; B3 and B4 are part desktop fix, part service-only. | [What must change first](#what-must-change-first) |
 | Does the RPC contract change? | No. The service spawns the same child with the same arguments. | [04-rpc-contract.md](04-rpc-contract.md); `src/main/domain/session/PiSession.ts:127-135` |
-| Where does it run? | Open: a separate process, or embedded in Electron main. | [Process placement (open)](#process-placement-open) |
+| Where does it run? | Open for the maintainer: a separate process, or embedded in Electron main. **[community]** Both community authors agreed on a separate process in [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2). | [Process placement (open)](#process-placement-open) |
 | Where does it keep its configuration? | Open. Today the home choice is under Electron's `userData`. | [Config and state location (open)](#config-and-state-location-open) |
 
 ## Responsibilities
@@ -174,6 +174,8 @@ The six runtime requirements of [proposal 0004](07-proposals/0004-host-service.m
 ## Process placement (open)
 
 [Proposal 0004](07-proposals/0004-host-service.md#open-questions) keeps this open (design question 1). This page lays out the tradeoffs; it does not decide.
+
+**[community] Agreed in [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), pending the maintainer: placement (a).** Both community authors agreed on a separate service process. Under (b), session lifetime stays tied to Electron main, as with a supervisor in main ([proposal 0005](07-proposals/0005-session-process-design.md#proposal)); only (a) lets browser and mobile clients work without the desktop app (row "Browser access when Electron is closed" below), so a web-first release would not depend on the desktop. The desktop app, when present, connects to a running service or starts one, as Paseo does (below). How the service starts without the app stays open as [CT-03](13-clients-and-topologies.md#open-questions) ([10, Service lifecycle per OS](10-platforms.md#service-lifecycle-per-os)). Costs recorded with it: B3 (row "Version skew") and a lifecycle on quit (row "Lifecycle on quit").
 
 - **(a) A separate service process.** Electron starts it, or connects to one that is already running, and becomes a client like any other.
 - **(b) Embedded in Electron main.** The host runs in the Electron main process, as `ChatHost` does today, and also listens on a WebSocket port for other clients.

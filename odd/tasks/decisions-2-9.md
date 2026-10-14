@@ -29,7 +29,7 @@ Feature document (ODD). Repository: `matraket/gentle-shell-desktop`. Base: `docs
 | ID | Specs | Task | Route | Status | Evidence |
 |---|---|---|---|---|---|
 | T1 | S1, S6 | This feature document | inline | done | First commit on the branch. |
-| T2 | S2, S3 | #2: host service as a separate process (placement (a)) | inline | pending | |
+| T2 | S2, S3 | #2: host service as a separate process (placement (a)) | inline | done | Commit `docs: record the agreed host service placement`: proposals 0005 (line 35, open-decisions table with a new agreed column) and 0004 (design question 1), `11-host-service.md` (summary, at a glance, process placement), ADR index, glossary, platforms; English and Spanish. Headings and anchors unchanged. Mirror check: 38 pairs, 0 problems; `git diff --check` clean. |
 | T3 | S2, S3 | #3: inherit by default, adjustable in the service configuration, service secrets scrubbed | inline | pending | |
 | T4 | S2, S3 | #4: stop idle children and reopen on demand, with a safe idle rule and a grace period | inline | pending | |
 | T5 | S2, S3, S4 | #5: one live session shared by every client | inline | pending | |

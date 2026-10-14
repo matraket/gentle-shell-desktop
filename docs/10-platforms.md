@@ -155,7 +155,7 @@ Each piece has four rows: what its **docs** say (a support statement, or only a 
 
 ### Service lifecycle per OS
 
-Who starts and stops the service depends on [process placement](11-host-service.md#process-placement-open), which is open.
+Who starts and stops the service depends on [process placement](11-host-service.md#process-placement-open), which is open for the maintainer; both community authors agreed on (a) in [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2).
 
 | Placement | Who starts it | Who stops it | Per-OS notes |
 |---|---|---|---|

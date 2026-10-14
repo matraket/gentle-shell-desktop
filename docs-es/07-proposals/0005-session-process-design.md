@@ -34,7 +34,7 @@ Electron main (supervisor: registry, lifecycle, authorization, logs)
 - **Un hijo por conversación activa.** Cada chat activo recibe su propio hijo RPC de larga vida, propiedad del main y supervisado por él; ningún renderer genera pi (`pr30:docs/pi-electron-session-process-design.md:7`). Un hijo atiende una conversación durante toda su vida y nunca se comparte mediante `switch_session`; reabrir inicia un proceso nuevo (`pr30:docs/pi-electron-session-process-design.md:24`).
 - **Al menos dos procesos del SO por chat (corrección).** PR #30 dice un proceso del sistema operativo (`pr30:docs/pi-electron-session-process-design.md:35`; `pr30:docs/system-design.md:108`). El main de Electron lanza el lanzador `gentle-shell` (`gentle-shell --mode rpc`) (`desktop@5ab4a00:src/main/domain/session/PiSession.ts:127-135`), y el lanzador genera pi con stdio heredado (`gs@ac67159:bin/gentle-shell.mjs:1396`, `:1403-1408`; [cadena de procesos](../04-rpc-contract.md#cadena-de-procesos)). `Inference:` los topes de hijos y las políticas de desalojo deben contar al menos dos procesos por chat, no uno; `Inference:` en Windows, el `shell: launchPlan.shell` de la implementación del lanzador gentle-shell puede añadir `cmd.exe` para un shim batch, así que no se afirma ningún recuento exacto más allá de al menos dos.
 - **Alternativas discutidas en PR #30 (no decididas aquí).** Un hijo compartido mediante `switch_session` sigue abierto bajo [vision Q3](../00-vision.md#preguntas-abiertas-para-el-mantenedor): PR #30 prefiere el aislamiento salvo que la evidencia de recursos pese más, pero esta propuesta no lo decide. Pi embebido en main vía SDK es la posición descartada de PR #30 para una integración RPC (`pr30:docs/system-design.md:350-352`).
-- **Diferido: host en un Utility Process.** Alojar el registro en un Utility Process se difiere hasta que la carga de trabajo medida o la evidencia de fiabilidad lo justifiquen (`pr30:docs/system-design.md:353`); dónde vive el dueño es [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), aún abierto.
+- **Diferido: host en un Utility Process.** Alojar el registro en un Utility Process se difiere hasta que la carga de trabajo medida o la evidencia de fiabilidad lo justifiquen (`pr30:docs/system-design.md:353`); dónde vive el dueño es [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2): los dos autores de la comunidad acordaron un servicio host en un proceso aparte, pendiente del mantenedor (ver [Decisiones abiertas](#decisiones-abiertas)).
 
 ## Requisitos del runtime
 
@@ -63,18 +63,18 @@ Las dos propuestas convergen en un hijo por chat, pero responden a capas distint
 
 ## Decisiones abiertas
 
-Cada fila es un issue abierto; ambas alternativas siguen sobre la mesa hasta que decida el mantenedor:
+Cada fila es un issue de decisión. Ambas alternativas siguen sobre la mesa hasta que decida el mantenedor; la última columna recoge la posición **[community]** que los dos autores de la comunidad acordaron en el issue, pendiente del mantenedor:
 
-| Issue | Pregunta | Alternativas abiertas |
-|---|---|---|
-| [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2) | Dónde vive el dueño de la sesión | Supervisor en main (Utility Process solo con evidencia medida) vs un servicio host, aparte o embebido en main, con un Utility Process como tercera ubicación |
-| [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) | Qué entorno hereda el hijo | Lista permitida explícita y directorio de trabajo vs heredar todo el entorno |
-| [issue #4](https://github.com/matraket/gentle-shell-desktop/issues/4) | Cuántos hijos siguen vivos | Mantener vivos los hijos inactivos, con tope y política de avisar, encolar o desalojar, vs detenerlos y reabrirlos bajo demanda |
-| [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5) | Dos escritores sobre un archivo de sesión | Impedir la doble propiedad dentro de una instancia vs un comportamiento explícito de solo lectura o multi-vínculo |
-| [issue #6](https://github.com/matraket/gentle-shell-desktop/issues/6) | Eventos tardíos tras reiniciar un hijo | Token de generación o de vínculo por hijo vs una revisión por chat en cada instantánea |
-| [issue #7](https://github.com/matraket/gentle-shell-desktop/issues/7) | Ponerse al día tras reiniciar un servicio | Cursor durable (`get_entries` con `since`), que puede combinarse con las instantáneas, vs instantáneas completas sin cursor en el cliente; cómo el servicio reconstruye su estado desde pi tras un reinicio aún no está escrito |
-| [issue #8](https://github.com/matraket/gentle-shell-desktop/issues/8) | Propiedad de los diálogos entre ventanas o clientes | Una ventana es dueña de los diálogos y del cierre vs la primera respuesta gana y la segunda recibe `dialog_not_pending` |
-| [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9) | Validación del remitente IPC | Validar el marco remitente en main vs confiar en la ventana propia de la app y autenticar solo el socket |
+| Issue | Pregunta | Alternativas abiertas | Acordado por los dos autores de la comunidad |
+|---|---|---|---|
+| [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2) | Dónde vive el dueño de la sesión | Supervisor en main (Utility Process solo con evidencia medida) vs un servicio host, aparte o embebido en main, con un Utility Process como tercera ubicación | El servicio host, en un proceso aparte (ubicación (a) de [11 §Ubicación del proceso](../11-host-service.md#ubicación-del-proceso-abierta)); cómo arranca sin la app de escritorio sigue abierto como [CT-03](../13-clients-and-topologies.md#preguntas-abiertas) |
+| [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) | Qué entorno hereda el hijo | Lista permitida explícita y directorio de trabajo vs heredar todo el entorno | Todavía no |
+| [issue #4](https://github.com/matraket/gentle-shell-desktop/issues/4) | Cuántos hijos siguen vivos | Mantener vivos los hijos inactivos, con tope y política de avisar, encolar o desalojar, vs detenerlos y reabrirlos bajo demanda | Todavía no |
+| [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5) | Dos escritores sobre un archivo de sesión | Impedir la doble propiedad dentro de una instancia vs un comportamiento explícito de solo lectura o multi-vínculo | Todavía no |
+| [issue #6](https://github.com/matraket/gentle-shell-desktop/issues/6) | Eventos tardíos tras reiniciar un hijo | Token de generación o de vínculo por hijo vs una revisión por chat en cada instantánea | Todavía no |
+| [issue #7](https://github.com/matraket/gentle-shell-desktop/issues/7) | Ponerse al día tras reiniciar un servicio | Cursor durable (`get_entries` con `since`), que puede combinarse con las instantáneas, vs instantáneas completas sin cursor en el cliente; cómo el servicio reconstruye su estado desde pi tras un reinicio aún no está escrito | Todavía no |
+| [issue #8](https://github.com/matraket/gentle-shell-desktop/issues/8) | Propiedad de los diálogos entre ventanas o clientes | Una ventana es dueña de los diálogos y del cierre vs la primera respuesta gana y la segunda recibe `dialog_not_pending` | Todavía no |
+| [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9) | Validación del remitente IPC | Validar el marco remitente en main vs confiar en la ventana propia de la app y autenticar solo el socket | Todavía no |
 
 ## Fuentes
 
