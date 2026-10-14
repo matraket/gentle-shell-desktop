@@ -32,7 +32,7 @@ Electron main (supervisor: registry, lifecycle, authorization, logs)
 - **One child per active conversation.** Each active chat gets its own long-lived RPC child, owned and supervised by main; a renderer never spawns pi (`pr30:docs/pi-electron-session-process-design.md:7`). A child serves one conversation for its lifetime and is never shared via `switch_session`; reopening starts a new process (`pr30:docs/pi-electron-session-process-design.md:24`).
 - **At least two OS processes per chat (correction).** PR #30 says one operating-system process (`pr30:docs/pi-electron-session-process-design.md:35`; `pr30:docs/system-design.md:108`). Electron main launches the `gentle-shell` launcher (`gentle-shell --mode rpc`) (`desktop@5ab4a00:src/main/domain/session/PiSession.ts:127-135`), and the launcher spawns pi with inherited stdio (`gs@ac67159:bin/gentle-shell.mjs:1396`, `:1403-1408`; [process chain](../04-rpc-contract.md#process-chain)). `Inference:` child caps and eviction policies must count at least two processes per chat, not one; `Inference:` on Windows, the gentle-shell launcher implementation's `shell: launchPlan.shell` may add `cmd.exe` for a batch shim, so no exact count beyond at least two is asserted.
 - **Alternatives discussed in PR #30 (not decided here).** A shared child via `switch_session` stays open under [vision Q3](../00-vision.md#open-questions-for-the-maintainer): PR #30 prefers isolation unless resource evidence outweighs it, but this proposal does not decide it. Pi embedded in main via SDK is PR #30's rejected position for an RPC integration (`pr30:docs/system-design.md:350-352`).
-- **Deferred: Utility Process host.** Hosting the registry in a Utility Process is deferred until measured workload or reliability evidence justifies it (`pr30:docs/system-design.md:353`); where the owner lives is [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), still open.
+- **Deferred: Utility Process host.** Hosting the registry in a Utility Process is deferred until measured workload or reliability evidence justifies it (`pr30:docs/system-design.md:353`); where the owner lives is [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2): both community authors agreed on a host service in a separate process, pending the maintainer (see [Open decisions](#open-decisions)).
 
 ## Runtime requirements
 
@@ -61,18 +61,18 @@ The two proposals converge on one child per chat but answer different layers: th
 
 ## Open decisions
 
-Each row is an open issue; both alternatives stay on the table until the maintainer decides:
+Each row is a decision issue. Both alternatives stay on the table until the maintainer decides; the last column records the **[community]** position that both community authors agreed in the issue, pending the maintainer:
 
-| Issue | Question | Alternatives left open |
-|---|---|---|
-| [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2) | Where the session owner lives | Supervisor in main (Utility Process only on measured evidence) vs a host service, separate or embedded in main, with a Utility Process as a third placement |
-| [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) | Which environment the child inherits | Explicit allowlist and working directory vs inheriting the whole environment |
-| [issue #4](https://github.com/matraket/gentle-shell-desktop/issues/4) | How many children stay alive | Keep idle children alive, with a cap and a warn, queue or evict policy, vs stop them and reopen on demand |
-| [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5) | Two writers on one session file | Prevent double ownership within one instance vs an explicit read-only or multi-attachment behavior |
-| [issue #6](https://github.com/matraket/gentle-shell-desktop/issues/6) | Late events after a child restart | Generation or attachment token per child vs a per-chat revision in every snapshot |
-| [issue #7](https://github.com/matraket/gentle-shell-desktop/issues/7) | Catching up after a service restart | Durable cursor (`get_entries` with `since`), which may combine with snapshots, vs full snapshots with no client-side cursor; how the service rebuilds its state from pi after a restart is still unwritten |
-| [issue #8](https://github.com/matraket/gentle-shell-desktop/issues/8) | Dialog ownership across windows or clients | One window owns the dialogs and close behavior vs first answer wins with `dialog_not_pending` for the second |
-| [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9) | Validating the IPC sender | Validate the sender frame in main vs trust the app's own window and authenticate only the socket |
+| Issue | Question | Alternatives left open | Agreed by both community authors |
+|---|---|---|---|
+| [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2) | Where the session owner lives | Supervisor in main (Utility Process only on measured evidence) vs a host service, separate or embedded in main, with a Utility Process as a third placement | The host service, in a separate process (placement (a) of [11 §Process placement](../11-host-service.md#process-placement-open)); how it starts without the desktop app stays open as [CT-03](../13-clients-and-topologies.md#open-questions) |
+| [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3) | Which environment the child inherits | Explicit allowlist and working directory vs inheriting the whole environment | Not yet |
+| [issue #4](https://github.com/matraket/gentle-shell-desktop/issues/4) | How many children stay alive | Keep idle children alive, with a cap and a warn, queue or evict policy, vs stop them and reopen on demand | Not yet |
+| [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5) | Two writers on one session file | Prevent double ownership within one instance vs an explicit read-only or multi-attachment behavior | Not yet |
+| [issue #6](https://github.com/matraket/gentle-shell-desktop/issues/6) | Late events after a child restart | Generation or attachment token per child vs a per-chat revision in every snapshot | Not yet |
+| [issue #7](https://github.com/matraket/gentle-shell-desktop/issues/7) | Catching up after a service restart | Durable cursor (`get_entries` with `since`), which may combine with snapshots, vs full snapshots with no client-side cursor; how the service rebuilds its state from pi after a restart is still unwritten | Not yet |
+| [issue #8](https://github.com/matraket/gentle-shell-desktop/issues/8) | Dialog ownership across windows or clients | One window owns the dialogs and close behavior vs first answer wins with `dialog_not_pending` for the second | Not yet |
+| [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9) | Validating the IPC sender | Validate the sender frame in main vs trust the app's own window and authenticate only the socket | Not yet |
 
 ## Sources
 

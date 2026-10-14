@@ -157,7 +157,7 @@ Cada pieza tiene cuatro filas: lo que dice su **documentación** (una declaraci�
 
 ### Ciclo de vida del servicio por sistema operativo
 
-Quién inicia y quién detiene el servicio depende de la [ubicación del proceso](11-host-service.md#ubicación-del-proceso-abierta), que está abierta.
+Quién inicia y quién detiene el servicio depende de la [ubicación del proceso](11-host-service.md#ubicación-del-proceso-abierta), que está abierta para el mantenedor; los dos autores de la comunidad acordaron (a) en el [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2).
 
 | Ubicación | Quién lo inicia | Quién lo detiene | Notas por sistema operativo |
 |---|---|---|---|

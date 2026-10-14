@@ -127,6 +127,8 @@ T3 Code's Pi provider is in nightly builds only: the nightly tag `v0.0.46-nightl
    | Separate process | Browser and mobile clients work without the desktop app running; one service for every client. | `Inference:` shipped inside the app, it can run under the app's own Electron binary in Node mode, so it adds no second binary to sign ([11 §Process placement](../11-host-service.md#process-placement-open)); running it without the app needs a second distributable to package, sign and update (today nothing is signed; [platforms, packaging and signing](../10-platforms.md#packaging-and-signing), [milestone M5](../09-roadmap.md#m5-signing-and-auto-update)), plus a lifecycle (who starts and stops it). |
    | Embedded in Electron main | Nothing new to package or sign; the desktop keeps a single process tree. | `Inference:` browser and mobile clients work only while the desktop app is open. |
 
+   **[community]** Both community authors agreed on a separate process in [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), pending the maintainer ([11 §Process placement](../11-host-service.md#process-placement-open)).
+
 2. **Roadmap F1 before or after extraction.** B1 is F1's work; doing it first keeps the extraction a move, doing it after designs the registry once, in the service.
 3. **Where the service keeps its configuration.** Today the first-run choice is stored under Electron's per-user data directory (`gentle-shell-desktop@5ab4a00:src/main/index.ts:52`), which a separate process does not have.
 
