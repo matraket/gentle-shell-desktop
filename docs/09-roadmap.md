@@ -324,6 +324,7 @@ A quick win here is a change that is **desktop-only** (no upstream change), **ne
 - **Files.** `gentle-shell-desktop@5ab4a00:src/renderer/index.html:7` (`'unsafe-eval'` in the production CSP), `:11-16` (fonts from Google at runtime); `src/main/index.ts:97-102` (window-open handler; no `will-navigate` guard exists); `src/main/ipc/registerHandlers.ts:28-37` (arguments used as-is).
 - **Scope.** Drop `'unsafe-eval'`, bundle the fonts, add a `will-navigate` deny handler, validate IPC arguments (audit A14). **Not included:** enabling the sandbox, because whether the ESM preload allows it is `UNVERIFIED` (audit A14).
 - **Why no upstream or decision.** All four are desktop configuration with an audit recommendation and no product trade-off.
+- **Related decision.** **[community]** [Issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9) (agreed by both community authors, pending the maintainer) settles the sender part of [audit A14](03-architecture/audit.md#a14-preload-and-ipc-hardening): the sender check applies to the IPC that remains in main. This quick win keeps the other A14 items it already lists; the sandbox stays out, as above.
 - **Test-first.** RED: `registerHandlers` tests that reject malformed arguments; a test for the navigation handler. `UNVERIFIED:` whether any dependency needs `eval`; `pnpm smoke:electron` would show a failure at runtime.
 
 ### QW-06. Mock bridge in packaged builds (audit A15)
