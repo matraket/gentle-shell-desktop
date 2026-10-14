@@ -69,6 +69,12 @@
 - **Autenticación.** Emparejamiento del dispositivo con una credencial por dispositivo que puede revocarse (HP-02, opción (b)). T3 Code: "Pairing authorizes that device for future connections" (`t3code@eac52f0:docs/user/remote-access.md:59`), y el host puede "revoke client sessions" (`:148-150`).
 - **Qué necesita de 12.** `Inference:` un build de una tienda de apps se actualiza según su propio calendario, así que necesita una regla de versionado que tolere el desfase (HP-01). En una red móvil, las instantáneas completas cuestan ancho de banda (HP-06) y los enlaces lentos necesitan una cota de búfer (HP-04). Dos clientes pueden actuar sobre un chat, por ejemplo un teléfono y el escritorio respondiendo a un mismo diálogo (HP-03).
 
+### Terminal (TUI de gentle-shell)
+
+- **No es un cliente del servicio.** **[community]** Acordado en el [issue #5](https://github.com/matraket/gentle-shell-desktop/issues/5), pendiente del mantenedor. La TUI de la terminal ejecuta su propio pi en su propio proceso, así que una TUI y un hijo del servicio sobre una misma sesión son dos escritores, y pi no toma ningún bloqueo (`pi@a13d35a:packages/coding-agent/src/core/session-manager.ts:1187`). Las sesiones de pi son un árbol que permite "in-place branching without creating new files" (`pi@a13d35a:packages/coding-agent/docs/session-format.md:3`). `Inference:` (no ejecutado) el resultado probable son dos ramas en un mismo archivo, cada proceso siguiendo la suya sin ver la del otro.
+- **Una sesión iniciada en la terminal se publica en el servicio**, para que otros clientes puedan vincularse a ella. gentle-shell lo haría mediante una extensión; las extensiones ya pueden inyectar mensajes (`pi.sendUserMessage()`, `pi@a13d35a:packages/coding-agent/docs/extensions.md:79`). Sin un servicio en marcha, la terminal funciona sola, como hoy. `UNVERIFIED:` si una extensión puede observar la salida en streaming y los diálogos de otras extensiones.
+- **Límite conocido, sin decidir.** Reanudar en la terminal (`--resume`) una sesión que ya tiene un hijo del servicio inicia un segundo escritor y ramifica la sesión. Lo mismo pasa hoy entre dos terminales, así que el servicio no lo introduce; impedirlo necesitaría un bloqueo en pi.
+
 ## Topologías
 
 | | Clientes | Servicio | Runtime (procesos hijo `gentle-shell --mode rpc`) | Ruta hasta el servicio | En esta propuesta |
