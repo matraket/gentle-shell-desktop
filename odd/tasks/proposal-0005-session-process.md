@@ -11,6 +11,7 @@ Move the session-process design from PR #30 into a numbered, community-authored 
 - In proposal and tracking text, refer to the source only as `PR #30` and with the established `pr30:` citation prefix.
 - The runtime chain is one `gentle-shell` launcher plus one pi process per chat (two OS processes); do not imply a single shared pi runtime or count only one OS process.
 - Decision issues #2–#9 remain open; present their alternatives without deciding them.
+  - 2026-10-14: both community authors have since agreed on decision issues #2 to #9, pending the maintainer; the agreed positions are recorded in the corpus by `odd/tasks/decisions-2-9.md`. This constraint applied to the proposal as written.
 - Proposal 0005 records the PR #30 design; it does not make it current architecture or settle its placement against proposal 0004.
 - Follow the existing proposal template and write an English source plus a structurally aligned Spanish mirror. Update both proposal indexes.
 - The user approved implementing the repository owner's PR #20 feedback. Keep English and Spanish changes together; do not rewrite published history, force-push, or post review replies. Defer edits to proposal 0004 to the issue #1 reconciliation.
