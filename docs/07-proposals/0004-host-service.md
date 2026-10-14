@@ -130,7 +130,7 @@ T3 Code's Pi provider is in nightly builds only: the nightly tag `v0.0.46-nightl
    **[community]** Both community authors agreed on a separate process in [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), pending the maintainer ([11 §Process placement](../11-host-service.md#process-placement-open)).
 
 2. **Roadmap F1 before or after extraction.** B1 is F1's work; doing it first keeps the extraction a move, doing it after designs the registry once, in the service.
-3. **Where the service keeps its configuration.** Today the first-run choice is stored under Electron's per-user data directory (`gentle-shell-desktop@5ab4a00:src/main/index.ts:52`), which a separate process does not have.
+3. **Where the service keeps its configuration.** Today the first-run choice is stored under Electron's per-user data directory (`gentle-shell-desktop@5ab4a00:src/main/index.ts:52`), which a separate process does not have. **[community]** The child-environment adjustments agreed by both community authors in [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3), pending the maintainer, live in this configuration too.
 
 ## Dependencies
 

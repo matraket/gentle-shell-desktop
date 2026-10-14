@@ -132,7 +132,7 @@ El proveedor Pi de T3 Code solo está en las builds nightly: la etiqueta nightly
    **[community]** Los dos autores de la comunidad acordaron un proceso separado en el [issue #2](https://github.com/matraket/gentle-shell-desktop/issues/2), pendiente del mantenedor ([11 §Ubicación del proceso](../11-host-service.md#ubicación-del-proceso-abierta)).
 
 2. **Roadmap F1 antes o después de la extracción.** B1 es el trabajo de F1; hacerlo antes mantiene la extracción como un simple traslado, hacerlo después diseña el registro una sola vez, en el servicio.
-3. **Dónde guarda el servicio su configuración.** Hoy la elección del primer arranque se guarda en el directorio de datos por usuario de Electron (`gentle-shell-desktop@5ab4a00:src/main/index.ts:52`), que un proceso separado no tiene.
+3. **Dónde guarda el servicio su configuración.** Hoy la elección del primer arranque se guarda en el directorio de datos por usuario de Electron (`gentle-shell-desktop@5ab4a00:src/main/index.ts:52`), que un proceso separado no tiene. **[community]** Los ajustes del entorno de los hijos que los dos autores de la comunidad acordaron en el [issue #3](https://github.com/matraket/gentle-shell-desktop/issues/3), pendientes del mantenedor, también viven en esta configuración.
 
 ## Dependencias
 
