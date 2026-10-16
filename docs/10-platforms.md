@@ -164,7 +164,7 @@ Who starts and stops the service depends on [process placement](11-host-service.
 | **(a) Started by the app** | The app, or it connects to a service already running. | The app on quit, or nobody if the service is kept running for other clients. | `Inference:` the same on every OS; Paseo stops a daemon it started unless `keepRunningAfterQuit` is set ([11, Process placement](11-host-service.md#process-placement-open)). |
 | **(a) Standalone, for browser or phone clients** | A per-user service of the OS, or the user from a terminal. | The OS at logout or shutdown, or the user. | T3 Code's precedent: on Linux it "needs systemd user services" and enables lingering so it "starts at boot and keeps running after logout"; on macOS it starts "when you log in" and stops "when you log out", through a LaunchAgent; "Windows background services are not supported." (`t3code@eac52f0:docs/user/background-service.md:45-54`, `:94`). |
 
-Whether a standalone service starts at login is open: [CT-03](13-clients-and-topologies.md#open-questions). `Inference:` on Windows no pinned precedent provides a background service, so a Windows user of a browser or phone client would depend on the desktop app, or on a service inside WSL (below).
+Whether a standalone service starts at login (only while the app runs, or an opt-in login item per OS) is open: [CT-03](13-clients-and-topologies.md#open-questions). `Inference:` on Windows no pinned precedent provides a background service, so a Windows user of a browser or phone client would depend on the desktop app, or on a service inside WSL (below).
 
 ### Port and loopback binding
 
