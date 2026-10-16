@@ -291,7 +291,7 @@ This refines [04-rpc-contract.md observation 6](../04-rpc-contract.md#compatibil
 - Enable the sandbox. `UNVERIFIED:` whether the ESM preload (`preload/index.mjs`, `gentle-shell-desktop@5ab4a00:src/main/index.ts:82`) prevents this was not checked against Electron's documentation.
 - Drop `'unsafe-eval'` from the production CSP and bundle the fonts.
 - Add a `will-navigate` deny handler.
-- **[community]** Sender check: agreed in [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9), pending the maintainer. Under placement (a) the window reaches the service as an authenticated WebSocket client, and the sender check applies to the IPC that remains in main. The CSP, navigation and argument items are roadmap [QW-05](../09-roadmap.md#qw-05-csp-navigation-and-ipc-hardening-audit-a14-part); the sandbox stays outside QW-05 while the ESM preload question above is `UNVERIFIED`.
+- **[community]** Sender check: agreed in [issue #9](https://github.com/matraket/gentle-shell-desktop/issues/9), pending the maintainer. Under placement (a) the window reaches the service as an authenticated WebSocket client, and the sender check applies to any IPC that remains in main. `Inference:` under (a) every chat and setup channel moves to the protocol ([11, Component map](../11-host-service.md#component-map-current-to-service)), so the check guards IPC added to main later, not the handlers listed above. The CSP, navigation and argument items are roadmap [QW-05](../09-roadmap.md#qw-05-csp-navigation-and-ipc-hardening-audit-a14-part); the sandbox stays outside QW-05 while the ESM preload question above is `UNVERIFIED`.
 
 ### A15. Silent mock-bridge fallback in packaged builds
 
