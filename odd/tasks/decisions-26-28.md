@@ -24,11 +24,11 @@ Feature document (ODD). Repository: `matraket/gentle-shell-desktop`. Base: `docs
 
 | ID | Specs | Task | Route | Status | Evidence |
 |---|---|---|---|---|---|
-| T1 | S1-S4 | Record #26 in `11-host-service.md` (child lifetime) and proposal 0005 (#4 row) | inline | pending | |
-| T2 | S1-S4 | Record #27 in `12-host-protocol.md` (late-event guards) and proposal 0005 (#6 row) | inline | pending | |
-| T3 | S1-S4 | Record #28 in `12-host-protocol.md` (dialog rule) and proposal 0005 (#8 row) | inline | pending | |
-| T4 | S5 | Update T16 of `odd/tasks/decisions-2-9.md` | inline | pending | |
-| T5 | S6 | Run the checks | inline | pending | |
+| T1 | S1-S4 | Record #26 in `11-host-service.md` (child lifetime) and proposal 0005 (#4 row) | inline | done | `docs: record the agreed idle stop predicate` |
+| T2 | S1-S4 | Record #27 in `12-host-protocol.md` (late-event guards) and proposal 0005 (#6 row) | inline | done | `docs: record the agreed launch token and client rev` |
+| T3 | S1-S4 | Record #28 in `12-host-protocol.md` (dialog rule) and proposal 0005 (#8 row) | inline | done | `docs: record the agreed dialog trace and timeout display`. New citations checked at their pins: `rpc-extension-ui.md:33` (`undefined` default), `rpc-mode.ts:129` (the request is written after the timer starts at `:115-120`). |
+| T4 | S5 | Update T16 of `odd/tasks/decisions-2-9.md` | inline | done | `docs(odd): record decisions 26 to 28` |
+| T5 | S6 | Run the checks | inline | done | Mirror 38 pairs, 0 problems; messages 0 bare references; `git diff --check docs/integration` clean; no U+2013 or U+2014 in added lines; line counts of the six changed pages unchanged. |
 
 ## Log
 
